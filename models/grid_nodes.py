@@ -1,347 +1,242 @@
+from __future__ import annotations
 import time
 import uuid
 import random
 import logging
-from typing import Dict, List, Any, Optional
 import threading
+from typing import Dict, List, Any, Optional
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger('grid_nodes')
+# Get the logger instance for this module
+logger = logging.getLogger(__name__)
 
-class BaseNode:
-    def __init__(self, node_id: Optional[str] = None, wallet_balance: float = 100.0):
-        self.node_id = node_id if node_id else str(uuid.uuid4())
-        self.wallet_balance = wallet_balance
-        self.blockchain = None  # Will be set when registered with network
-        self.active = False
-        self.thread = None
-    
-    def register_with_blockchain(self, blockchain):
-        """Register this node with the blockchain network"""
-        self.blockchain = blockchain
-        # Register this node with the blockchain so it can receive transaction notifications
-        blockchain.register_node(self)
-        return self
-    
-    def start(self):
-        """Start the node's activities in a separate thread"""
-        if self.thread is None:
-            self.active = True
-            self.thread = threading.Thread(target=self._run)
-            self.thread.daemon = True
-            self.thread.start()
-            logger.info(f"{self.__class__.__name__} {self.node_id[:8]} started")
-    
-    def stop(self):
-        """Stop the node's activities"""
-        self.active = False
-        if self.thread:
-            self.thread.join(timeout=2)
-            self.thread = None
-            logger.info(f"{self.__class__.__name__} {self.node_id[:8]} stopped")
-    
-    def _run(self):
-        """Main activity loop - to be implemented by subclasses"""
-        pass
+SIMULATION_SPEED_FACTOR = 360
 
-    def __repr__(self):
-        return f"{self.__class__.__name__}(id={self.node_id[:8]})"
+class SmartMeter:
+    def __init__(self, owner_id: str, prod_cap: float, cons_rate: float, sim_start_time: float):
+        self.owner_id = owner_id
+        self.production_capacity = prod_cap
+        self.consumption_rate = cons_rate
+        # FIX: The simulation start time is now passed in, not defined globally.
+        self.sim_start_time = sim_start_time
+        self.last_reading_time = time.time()
+        self.owner_node: Optional[GridNode] = None
 
+    def connect_to_node(self, node: GridNode):
+        self.owner_node = node
 
-class Prosumer(BaseNode):
-    """A node that both produces and consumes energy"""
-    def __init__(self, node_id=None, wallet_balance=100.0, 
-                 production_capacity=10.0, consumption_rate=5.0):
-        super().__init__(node_id, wallet_balance)
-        self.production_capacity = production_capacity  # kWh per hour
-        self.consumption_rate = consumption_rate  # kWh per hour
-        self.energy_surplus = 0.0
-        self.energy_price = random.uniform(0.10, 0.20)  # $ per kWh
-    
-    def _run(self):
-        """Simulate energy production and consumption"""
-        while self.active:
-            # Simulate energy production with some randomness (e.g., solar panel output varies)
-            production = self.production_capacity * random.uniform(0.5, 1.0)
-            
-            # Simulate energy consumption with some randomness
-            consumption = self.consumption_rate * random.uniform(0.7, 1.2)
-            
-            # Calculate surplus or deficit
-            self.energy_surplus = production - consumption
-            
-            # If we have surplus energy, try to sell it
-            if self.energy_surplus > 0 and self.blockchain:
-                self._offer_energy()
-                
-            # If we have energy deficit, try to buy energy
-            elif self.energy_surplus < 0 and self.blockchain:
-                self._request_energy()
-            
-            # Adjust price based on market conditions
-            self._adjust_energy_price()
-            
-            # Wait a bit before next cycle
-            time.sleep(random.uniform(5, 15))  # Simulated time
-    
-    def _offer_energy(self):
-        """Offer surplus energy on the market"""
-        if not self.blockchain:
-            return
-            
-        # Create a transaction to offer energy
-        grid_operator = self._find_grid_operator()
-        if grid_operator:
-            # Transaction with energy marketplace
-            self.blockchain.new_transaction(
-                sender=self.node_id,
-                recipient=grid_operator,
-                amount=self.energy_surplus * self.energy_price,
-                energy=self.energy_surplus,
-                transaction_type="energy_offer"
-            )
-            logger.info(f"Prosumer {self.node_id[:8]} offered {self.energy_surplus:.2f} kWh at ${self.energy_price:.2f}/kWh")
-    
-    def _request_energy(self):
-        """Request energy from the market"""
-        if not self.blockchain:
-            return
-            
-        # Create a transaction to request energy
-        grid_operator = self._find_grid_operator()
-        if grid_operator:
-            energy_needed = abs(self.energy_surplus)
-            cost = energy_needed * self.energy_price * 1.1  # Willing to pay 10% premium
-            
-            if cost <= self.wallet_balance:
-                self.blockchain.new_transaction(
-                    sender=self.node_id,
-                    recipient=grid_operator,
-                    amount=cost,
-                    energy=energy_needed,
-                    transaction_type="energy_request"
-                )
-                self.wallet_balance -= cost
-                logger.info(f"Prosumer {self.node_id[:8]} requested {energy_needed:.2f} kWh at ${self.energy_price * 1.1:.2f}/kWh")
-    
-    def _adjust_energy_price(self):
-        """Adjust energy price based on surplus/deficit"""
-        if self.energy_surplus > 0:
-            # Decrease price slightly if we have surplus
-            self.energy_price = max(0.08, self.energy_price * random.uniform(0.95, 0.99))
-        else:
-            # Increase price slightly if we have deficit
-            self.energy_price = min(0.30, self.energy_price * random.uniform(1.01, 1.05))
-    
-    def _find_grid_operator(self):
-        """Find a grid operator in the network - simplified version"""
-        # In a real implementation, this would look up an actual grid operator
-        # For this simulation, we'll assume there's a known grid operator
-        return "GRID_OPERATOR"
-
-
-class Consumer(BaseNode):
-    """A node that only consumes energy"""
-    def __init__(self, node_id=None, wallet_balance=100.0, consumption_rate=7.0):
-        super().__init__(node_id, wallet_balance)
-        self.consumption_rate = consumption_rate  # kWh per hour
-        self.max_price = random.uniform(0.15, 0.25)  # Maximum price willing to pay per kWh
-    
-    def _run(self):
-        """Simulate energy consumption"""
-        while self.active:
-            # Simulate energy consumption with some randomness
-            consumption = self.consumption_rate * random.uniform(0.8, 1.2)
-            
-            # Request energy from the grid
-            if self.blockchain:
-                self._request_energy(consumption)
-            
-            # Adjust max price based on market and personal factors
-            self._adjust_max_price()
-            
-            # Wait a bit before next cycle
-            time.sleep(random.uniform(10, 20))  # Simulated time
-    
-    def _request_energy(self, amount):
-        """Request energy from the market"""
-        if not self.blockchain:
-            return
-            
-        grid_operator = self._find_grid_operator()
-        if grid_operator:
-            # Calculate cost based on current max price
-            cost = amount * self.max_price
-            
-            if cost <= self.wallet_balance:
-                self.blockchain.new_transaction(
-                    sender=self.node_id,
-                    recipient=grid_operator,
-                    amount=cost,
-                    energy=amount,
-                    transaction_type="energy_request"
-                )
-                self.wallet_balance -= cost
-                logger.info(f"Consumer {self.node_id[:8]} requested {amount:.2f} kWh at ${self.max_price:.2f}/kWh")
-    
-    def _adjust_max_price(self):
-        """Adjust the maximum price willing to pay based on various factors"""
-        # Simple adjustment based on random market pressure
-        market_pressure = random.uniform(-0.02, 0.02)
-        self.max_price = max(0.10, min(0.35, self.max_price * (1 + market_pressure)))
-    
-    def _find_grid_operator(self):
-        """Find a grid operator in the network - simplified version"""
-        return "GRID_OPERATOR"
-
-
-class GridOperator(BaseNode):
-    """A node that manages the energy grid and facilitates energy trading"""
-    def __init__(self, node_id="GRID_OPERATOR", wallet_balance=1000.0):
-        super().__init__(node_id, wallet_balance)
-        self.energy_offers: List[Dict[str, Any]] = []
-        self.energy_requests: List[Dict[str, Any]] = []
-        self.base_energy_price = 0.15  # $ per kWh
-        self.grid_balance = 0.0  # kWh available in the grid
-        self.last_match_attempt = 0  # Track when we last tried to match trades
-    
-    def _run(self):
-        """Simulate grid operations"""
-        while self.active:
-            # Process pending energy offers and requests
-            if self.blockchain:
-                # Attempt to match trades more frequently
-                current_time = time.time()
-                if current_time - self.last_match_attempt >= 1:  # Check every second instead of waiting
-                    self._match_energy_trades()
-                    self.last_match_attempt = current_time
-            
-            # Adjust base energy price based on supply and demand
-            self._adjust_base_price()
-            
-            # Create a new block periodically - increased probability
-            if self.blockchain and random.random() < 0.5:  # 50% chance each cycle (up from 30%)
-                new_block = self.blockchain.create_new_block()
-                logger.info(f"Grid Operator created new block: {new_block}")
-            
-            # Wait a bit before next cycle - shorter wait time
-            time.sleep(random.uniform(1, 3))  # Reduced from 3-8 seconds
-    
-    def process_transaction(self, transaction):
-        """Process an energy transaction"""
-        if transaction['type'] == 'energy_offer':
-            self.energy_offers.append({
-                'sender': transaction['sender'],
-                'energy': transaction['energy'],
-                'price': transaction['amount'] / transaction['energy'] if transaction['energy'] > 0 else 0,
-                'timestamp': transaction['timestamp']
-            })
-            self.grid_balance += transaction['energy']
-            logger.info(f"Grid Operator received energy offer: {transaction['energy']:.2f} kWh")
-        
-        elif transaction['type'] == 'energy_request':
-            self.energy_requests.append({
-                'sender': transaction['sender'],
-                'energy': transaction['energy'],
-                'price': transaction['amount'] / transaction['energy'] if transaction['energy'] > 0 else 0,
-                'timestamp': transaction['timestamp']
-            })
-            logger.info(f"Grid Operator received energy request: {transaction['energy']:.2f} kWh")
-    
-    def _match_energy_trades(self):
-        """Match energy offers with energy requests"""
-        # Early return if no offers or requests
-        if not self.energy_offers or not self.energy_requests:
-            return
-            
-        # Sort offers by price (ascending)
-        sorted_offers = sorted(self.energy_offers, key=lambda x: x['price'])
-        
-        # Sort requests by price (descending)
-        sorted_requests = sorted(self.energy_requests, key=lambda x: x['price'], reverse=True)
-        
-        # Try to match offers with requests - more flexible matching
-        matches_made = False
-        for request in sorted_requests[:]:
-            # For short simulations, be more lenient with matching
-            for offer in sorted_offers[:]:
-                # Accept partial matches too
-                amount_to_trade = min(offer['energy'], request['energy'])
-                if amount_to_trade > 0:
-                    # Create a copy of the offer/request with adjusted energy
-                    modified_offer = offer.copy()
-                    modified_request = request.copy()
-                    modified_offer['energy'] = amount_to_trade
-                    modified_request['energy'] = amount_to_trade
-                    
-                    # Execute the trade
-                    self._execute_trade(modified_offer, modified_request)
-                    matches_made = True
-                    
-                    # Adjust the remaining energy
-                    offer['energy'] -= amount_to_trade
-                    request['energy'] -= amount_to_trade
-                    
-                    # Remove if fully satisfied
-                    if offer['energy'] <= 0.01:
-                        sorted_offers.remove(offer)
-                    if request['energy'] <= 0.01:
-                        sorted_requests.remove(request)
-                        break
-        
-        # Update our lists
-        self.energy_offers = [o for o in sorted_offers if o['energy'] > 0.01]
-        self.energy_requests = [r for r in sorted_requests if r['energy'] > 0.01]
-        
-        # Clean up old offers and requests (older than 5 minutes - reduced from 10)
+    def read_meter(self) -> Dict[str, Any]:
         current_time = time.time()
-        self.energy_offers = [o for o in self.energy_offers if current_time - o['timestamp'] < 300]
-        self.energy_requests = [r for r in self.energy_requests if current_time - r['timestamp'] < 300]
+        simulated_hours = (current_time - self.last_reading_time) * SIMULATION_SPEED_FACTOR / 3600.0
+        if simulated_hours <= 0: return {'net_energy': 0, 'hour': 0}
+
+        simulated_seconds_elapsed = (current_time - self.sim_start_time) * SIMULATION_SPEED_FACTOR
+        hour_of_day = (7 + (simulated_seconds_elapsed / 3600)) % 24
+
+        solar_factor = max(0, 1 - abs(hour_of_day - 14) / 7) * random.uniform(0.7, 1.0)
+        production = self.production_capacity * solar_factor * simulated_hours
+
+        peak_factor = 0.5 + 0.5 * max(max(0, 1 - abs(hour_of_day - 8)/3), max(0, 1 - abs(hour_of_day - 19)/4))
+        consumption = self.consumption_rate * peak_factor * random.uniform(0.8, 1.2) * simulated_hours
         
-        # Log status
-        if matches_made:
-            logger.info(f"Grid balance after matching: {self.grid_balance:.2f} kWh")
+        self.last_reading_time = current_time
+        net_energy = production - consumption
+        
+        if self.owner_node: self.owner_node.process_meter_reading({'net_energy': net_energy, 'hour': hour_of_day})
+        return {'net_energy': net_energy, 'hour': hour_of_day}
+
+# ... The rest of the file ...
+# (I am pasting the full, corrected version below for clarity)
+
+# --- Forward declaration for type hints ---
+class BaseNode: pass
+class Blockchain: pass
+class Block: pass
+class GridOperator(BaseNode): pass
+
+# --- BaseNode Class ---
+class BaseNode:
+    def __init__(self, node_id: str, wallet_balance: float):
+        self.node_id = node_id
+        self.wallet_balance = wallet_balance
+        self.blockchain: Optional[Blockchain] = None
+        self.can_mine = False
+        self.mining_thread: Optional[threading.Thread] = None
+        self.mining_active = False
+        self.active = True
+
+    def register_with_blockchain(self, blockchain: Blockchain):
+        self.blockchain = blockchain
+        blockchain.nodes.add(self)
+        logger.info(f"Node {self.node_id} registered.")
+
+    def create_transaction(self, recipient: str, amount: float, energy: float, tx_type: str) -> str:
+        if not self.blockchain: return ""
+        if tx_type.endswith("payment") and amount > self.wallet_balance: return ""
+        tx_id = self.blockchain.new_transaction(self.node_id, recipient, amount, energy, tx_type)
+        if tx_type.endswith("payment"): self.wallet_balance -= amount
+        return tx_id
+
+    def start_mining(self):
+        if self.can_mine and not self.mining_active:
+            self.mining_active = True
+            self.mining_thread = threading.Thread(target=self._mining_worker, daemon=True)
+            self.mining_thread.start()
+
+    def stop_mining(self):
+        if self.mining_active:
+            self.mining_active = False
+            if self.mining_thread and self.mining_thread.is_alive(): self.mining_thread.join(timeout=1.0)
+            self.mining_thread = None
+
+    def _mining_worker(self):
+        while self.active and self.mining_active:
+            if self.blockchain and self.blockchain.get_pending_transactions():
+                block = self.blockchain.create_new_block(miner_id=self.node_id)
+                if block: self.wallet_balance += 1.0
+            else: time.sleep(2)
+
+    def process_transaction(self, transaction: Dict[str, Any]):
+        if transaction['recipient'] == self.node_id:
+            if transaction['type'] == 'energy_payment': self.wallet_balance += transaction['amount']
+            elif transaction['type'] == 'energy_delivery' and hasattr(self, 'energy_storage'):
+                self.energy_storage = min(self.max_storage, self.energy_storage + transaction['energy'] * self.storage_efficiency)
+                logger.info(f"Node {self.node_id} received {transaction['energy']:.2f} kWh, storage is now {self.energy_storage:.2f} kWh.")
+                self.create_transaction(transaction['sender'], transaction['amount'], 0, 'energy_payment')
+
+# --- GridOperator Class ---
+class GridOperator(BaseNode):
+    def __init__(self, node_id: str, wallet_balance: float):
+        super().__init__(node_id, wallet_balance)
+        self.can_mine = True
+        self.base_price = 0.15
+        self.order_book = {'offers': [], 'requests': []}
+        self.lock = threading.Lock()
+        self.update_thread: Optional[threading.Thread] = None
+
+    def start(self):
+        logger.info(f"GridOperator {self.node_id} started.")
+        self.start_mining()
+        self.update_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
+        self.update_thread.start()
+
+    def stop(self):
+        self.active = False
+        self.stop_mining()
+        if self.update_thread and self.update_thread.is_alive(): self.update_thread.join(timeout=1.0)
+        logger.info(f"GridOperator {self.node_id} stopped.")
+
+    def submit_offer(self, offer: Dict[str, Any]):
+        with self.lock: self.order_book['offers'].append(offer)
+
+    def submit_request(self, request: Dict[str, Any]):
+        with self.lock: self.order_book['requests'].append(request)
+
+    def _monitoring_loop(self):
+        while self.active:
+            self._clear_market()
+            time.sleep(5)
     
-    def _execute_trade(self, offer, request):
-        """Execute an energy trade between a prosumer and consumer"""
-        if not self.blockchain:
-            return
+    def _clear_market(self):
+        with self.lock:
+            offers, requests = self.order_book['offers'], self.order_book['requests']
+            if not offers or not requests: return
+
+            offers.sort(key=lambda o: o['price'])
+            requests.sort(key=lambda r: r['price'], reverse=True)
+
+            trades_executed = 0
+            for req in list(requests):
+                for offer in list(offers):
+                    if offer['price'] <= req['price']:
+                        trade_energy = min(offer['energy'], req['energy'])
+                        if trade_energy < 0.01: continue
+                        trade_amount = trade_energy * offer['price']
+                        
+                        self.create_transaction(req['sender_id'], trade_amount, trade_energy, 'energy_delivery')
+                        trades_executed += 1
+                        
+                        offer['energy'] -= trade_energy
+                        req['energy'] -= trade_energy
             
-        # Calculate the trade price (average of offer and request)
-        trade_price = (offer['price'] + request['price']) / 2
-        total_amount = request['energy'] * trade_price
-        
-        # Create a transaction from grid operator to consumer
-        self.blockchain.new_transaction(
-            sender=self.node_id,
-            recipient=request['sender'],
-            amount=0,
-            energy=request['energy'],
-            transaction_type="energy_delivery"
-        )
-        
-        # Create a transaction from grid operator to prosumer (payment)
-        self.blockchain.new_transaction(
-            sender=self.node_id,
-            recipient=offer['sender'],
-            amount=total_amount,
-            energy=0,
-            transaction_type="energy_payment"
-        )
-        
-        # Update grid balance
-        self.grid_balance -= request['energy']
-        
-        logger.info(f"Grid Operator executed trade: {request['energy']:.2f} kWh at ${trade_price:.2f}/kWh")
-    
-    def _adjust_base_price(self):
-        """Adjust the base energy price based on grid balance"""
-        if self.grid_balance > 20:
-            # Surplus of energy, decrease price
-            self.base_energy_price = max(0.10, self.base_energy_price * 0.98)
-        elif self.grid_balance < 5:
-            # Shortage of energy, increase price
-            self.base_energy_price = min(0.30, self.base_energy_price * 1.02)
-        
-        # Small random fluctuation
-        self.base_energy_price *= random.uniform(0.995, 1.005)
+            if trades_executed > 0: logger.info(f"GridOperator cleared {trades_executed} trades.")
+            self.order_book['offers'] = [o for o in offers if o['energy'] > 0.01]
+            self.order_book['requests'] = [r for r in requests if r['energy'] > 0.01]
+
+    def get_market_price(self) -> float:
+        with self.lock:
+            valid_offers = [o for o in self.order_book['offers'] if o['energy'] > 0]
+            if not valid_offers: return self.base_price * 1.1
+            return min(o['price'] for o in valid_offers)
+
+# --- GridNode Class ---
+class GridNode(BaseNode):
+    def __init__(self, node_id: str, wallet_balance: float, is_producer: bool, prod_cap: float, cons_rate: float, sim_start_time: float):
+        super().__init__(node_id, wallet_balance)
+        self.is_producer = is_producer
+        self.smart_meter = SmartMeter(node_id, prod_cap, cons_rate, sim_start_time)
+        self.smart_meter.connect_to_node(self)
+        self.energy_storage = 0.0
+        self.max_storage = 10.0
+        self.storage_efficiency = 0.95
+        self.grid_operator: Optional[GridOperator] = None
+        self.update_thread: Optional[threading.Thread] = None
+
+    def start(self):
+        logger.info(f"Node {self.node_id} started.")
+        self.update_thread = threading.Thread(target=self._update_loop, daemon=True)
+        self.update_thread.start()
+
+    def stop(self):
+        self.active = False
+        self.stop_mining()
+        if self.update_thread and self.update_thread.is_alive(): self.update_thread.join(timeout=1.0)
+        logger.info(f"Node {self.node_id} stopped.")
+
+    def connect_to_node(self, other_node: BaseNode):
+        if isinstance(other_node, GridOperator): self.grid_operator = other_node
+
+    def _update_loop(self):
+        time.sleep(random.uniform(1, 5))
+        while self.active:
+            self.update_energy_status()
+            time.sleep(random.uniform(5, 10))
+
+    def update_energy_status(self):
+        reading = self.smart_meter.read_meter()
+        net_energy, hour = reading['net_energy'], reading.get('hour', 12)
+
+        if net_energy > 0: # Surplus
+            to_store = min(net_energy, self.max_storage - self.energy_storage)
+            if to_store > 0: self.energy_storage += to_store * self.storage_efficiency
+            remaining_excess = net_energy - (to_store / (self.storage_efficiency or 1))
+            if remaining_excess > 0.1: self._offer_excess_energy(remaining_excess)
+        elif net_energy < 0: # Deficit
+            from_storage = min(self.energy_storage, abs(net_energy) / (self.storage_efficiency or 1))
+            self.energy_storage -= from_storage
+            remaining_deficit = abs(net_energy) - (from_storage * self.storage_efficiency)
+            if remaining_deficit > 0.1: self._request_needed_energy(remaining_deficit)
+
+    def _offer_excess_energy(self, amount: float):
+        if self.grid_operator:
+            price = self.grid_operator.get_market_price() * random.uniform(0.95, 1.05)
+            self.grid_operator.submit_offer({'sender_id': self.node_id, 'energy': amount, 'price': price})
+
+    def _request_needed_energy(self, amount: float):
+        if self.grid_operator:
+            price = self.grid_operator.get_market_price() * random.uniform(0.98, 1.1)
+            self.grid_operator.submit_request({'sender_id': self.node_id, 'energy': amount, 'price': price})
+
+    def process_meter_reading(self, reading: Dict[str, Any]): pass
+
+# --- Prosumer and Consumer Classes ---
+class Prosumer(GridNode):
+    def __init__(self, node_id: str, wallet_balance: float, production_capacity: float, consumption_rate: float, sim_start_time: float):
+        super().__init__(node_id, wallet_balance, True, production_capacity, consumption_rate, sim_start_time)
+        self.can_mine = True
+        self.max_storage = 15.0
+        self.energy_storage = random.uniform(5.0, 10.0)
+
+class Consumer(GridNode):
+    def __init__(self, node_id: str, wallet_balance: float, consumption_rate: float, sim_start_time: float):
+        super().__init__(node_id, wallet_balance, False, 0.0, consumption_rate, sim_start_time)
+        self.max_storage = 5.0
