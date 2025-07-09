@@ -1,0 +1,297 @@
+2025-07-09 15:02:01,816 - smart_grid_simulation - INFO - Logging initialized. Log file: /home/m2l3k/Desktop/BlockchainNode/smartgrid_simulation.log
+2025-07-09 15:02:01,817 - smart_grid_simulation - INFO - Initializing blockchain (difficulty=2, GPU=False)
+2025-07-09 15:02:01,818 - blockchain - INFO - Genesis block created: 000f0b800ac7d3acd3ae6d384d7debd014359e61b15108bb96ff4f3fdd0c9ad9
+2025-07-09 15:02:01,818 - smart_grid_simulation - INFO - Creating grid operator node
+2025-07-09 15:02:01,818 - smart_grid_simulation - INFO - Creating 5 prosumer nodes
+2025-07-09 15:02:01,818 - smart_grid_simulation - INFO - Creating 8 consumer nodes
+2025-07-09 15:02:01,819 - smart_grid_simulation - INFO - Starting smart grid blockchain simulation
+2025-07-09 15:02:01,820 - blockchain - INFO - Block #1 added to the blockchain
+2025-07-09 15:02:01,821 - grid_nodes - INFO - GridOperator GRID_OPE started
+2025-07-09 15:02:01,821 - grid_nodes - INFO - Grid Operator created new block: Block(index=1, hash=0001a86305...)
+2025-07-09 15:02:01,821 - grid_nodes - INFO - Grid Operator received energy offer: 0.80 kWh
+2025-07-09 15:02:01,821 - grid_nodes - INFO - Prosumer f983fb87 started
+2025-07-09 15:02:01,821 - grid_nodes - INFO - Prosumer f983fb87 offered 0.80 kWh at $0.12/kWh
+2025-07-09 15:02:01,921 - grid_nodes - INFO - Grid Operator received energy offer: 5.37 kWh
+2025-07-09 15:02:01,921 - grid_nodes - INFO - Prosumer 1860eae6 started
+2025-07-09 15:02:01,922 - grid_nodes - INFO - Prosumer 1860eae6 offered 5.37 kWh at $0.18/kWh
+2025-07-09 15:02:02,022 - grid_nodes - INFO - Grid Operator received energy offer: 3.98 kWh
+2025-07-09 15:02:02,022 - grid_nodes - INFO - Prosumer 937174aa started
+2025-07-09 15:02:02,022 - grid_nodes - INFO - Prosumer 937174aa offered 3.98 kWh at $0.19/kWh
+2025-07-09 15:02:02,122 - grid_nodes - INFO - Grid Operator received energy request: 2.68 kWh
+2025-07-09 15:02:02,122 - grid_nodes - INFO - Prosumer 11f5975e started
+2025-07-09 15:02:02,122 - grid_nodes - INFO - Prosumer 11f5975e requested 2.68 kWh at $0.19/kWh
+2025-07-09 15:02:02,223 - grid_nodes - INFO - Grid Operator received energy request: 0.05 kWh
+2025-07-09 15:02:02,223 - grid_nodes - INFO - Prosumer ed23d52a started
+2025-07-09 15:02:02,223 - grid_nodes - INFO - Prosumer ed23d52a requested 0.05 kWh at $0.14/kWh
+2025-07-09 15:02:02,324 - grid_nodes - INFO - Grid Operator received energy request: 9.13 kWh
+2025-07-09 15:02:02,324 - grid_nodes - INFO - Consumer fb33008a started
+2025-07-09 15:02:02,325 - grid_nodes - INFO - Consumer fb33008a requested 9.13 kWh at $0.24/kWh
+2025-07-09 15:02:02,425 - grid_nodes - INFO - Grid Operator received energy request: 10.52 kWh
+2025-07-09 15:02:02,425 - grid_nodes - INFO - Consumer 71e68c3e started
+2025-07-09 15:02:02,425 - grid_nodes - INFO - Consumer 71e68c3e requested 10.52 kWh at $0.15/kWh
+2025-07-09 15:02:02,526 - grid_nodes - INFO - Grid Operator received energy request: 9.32 kWh
+2025-07-09 15:02:02,526 - grid_nodes - INFO - Consumer 28bb3325 started
+2025-07-09 15:02:02,526 - grid_nodes - INFO - Consumer 28bb3325 requested 9.32 kWh at $0.20/kWh
+2025-07-09 15:02:02,627 - grid_nodes - INFO - Grid Operator received energy request: 12.11 kWh
+2025-07-09 15:02:02,627 - grid_nodes - INFO - Consumer 9f4dd70d started
+2025-07-09 15:02:02,627 - grid_nodes - INFO - Consumer 9f4dd70d requested 12.11 kWh at $0.22/kWh
+2025-07-09 15:02:02,727 - grid_nodes - INFO - Grid Operator received energy request: 6.62 kWh
+2025-07-09 15:02:02,728 - grid_nodes - INFO - Consumer dee49475 started
+2025-07-09 15:02:02,728 - grid_nodes - INFO - Consumer dee49475 requested 6.62 kWh at $0.16/kWh
+2025-07-09 15:02:02,828 - grid_nodes - INFO - Grid Operator received energy request: 11.51 kWh
+2025-07-09 15:02:02,828 - grid_nodes - INFO - Consumer 4cc88b1c started
+2025-07-09 15:02:02,828 - grid_nodes - INFO - Consumer 4cc88b1c requested 11.51 kWh at $0.24/kWh
+2025-07-09 15:02:02,929 - grid_nodes - INFO - Grid Operator received energy request: 11.29 kWh
+2025-07-09 15:02:02,929 - grid_nodes - INFO - Consumer 795274d2 started
+2025-07-09 15:02:02,929 - grid_nodes - INFO - Consumer 795274d2 requested 11.29 kWh at $0.20/kWh
+2025-07-09 15:02:03,030 - grid_nodes - INFO - Grid Operator received energy request: 8.44 kWh
+2025-07-09 15:02:03,030 - grid_nodes - INFO - Consumer 88ed9a75 started
+2025-07-09 15:02:03,030 - grid_nodes - INFO - Consumer 88ed9a75 requested 8.44 kWh at $0.18/kWh
+2025-07-09 15:02:04,571 - grid_nodes - INFO - Grid Operator executed trade: 0.80 kWh at $0.18/kWh
+2025-07-09 15:02:04,571 - grid_nodes - INFO - Grid Operator executed trade: 5.37 kWh at $0.21/kWh
+2025-07-09 15:02:04,571 - grid_nodes - INFO - Grid Operator executed trade: 3.98 kWh at $0.22/kWh
+2025-07-09 15:02:04,572 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:05,785 - blockchain - INFO - Block #2 added to the blockchain
+2025-07-09 15:02:05,785 - grid_nodes - INFO - Grid Operator created new block: Block(index=2, hash=0004914dc6...)
+2025-07-09 15:02:08,057 - grid_nodes - INFO - Grid Operator received energy offer: 4.72 kWh
+2025-07-09 15:02:08,057 - grid_nodes - INFO - Prosumer 937174aa offered 4.72 kWh at $0.19/kWh
+2025-07-09 15:02:10,292 - grid_nodes - INFO - Grid Operator executed trade: 1.35 kWh at $0.21/kWh
+2025-07-09 15:02:10,292 - grid_nodes - INFO - Grid Operator executed trade: 3.37 kWh at $0.21/kWh
+2025-07-09 15:02:10,292 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:10,293 - blockchain - INFO - Block #3 added to the blockchain
+2025-07-09 15:02:10,293 - grid_nodes - INFO - Grid Operator created new block: Block(index=3, hash=00e94bfc2f...)
+2025-07-09 15:02:11,094 - grid_nodes - INFO - Grid Operator received energy offer: 5.79 kWh
+2025-07-09 15:02:11,094 - grid_nodes - INFO - Prosumer 1860eae6 offered 5.79 kWh at $0.18/kWh
+2025-07-09 15:02:11,378 - grid_nodes - INFO - Grid Operator executed trade: 5.76 kWh at $0.21/kWh
+2025-07-09 15:02:11,378 - grid_nodes - INFO - Grid Operator executed trade: 0.03 kWh at $0.20/kWh
+2025-07-09 15:02:11,378 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:11,772 - grid_nodes - INFO - Grid Operator received energy request: 0.44 kWh
+2025-07-09 15:02:11,772 - grid_nodes - INFO - Prosumer f983fb87 requested 0.44 kWh at $0.12/kWh
+2025-07-09 15:02:12,144 - grid_nodes - INFO - Grid Operator received energy request: 0.03 kWh
+2025-07-09 15:02:12,144 - grid_nodes - INFO - Prosumer 11f5975e requested 0.03 kWh at $0.20/kWh
+2025-07-09 15:02:13,131 - smart_grid_simulation - INFO - Simulation stats: 4 blocks, 24 transactions
+2025-07-09 15:02:13,131 - smart_grid_simulation - INFO - Energy trades executed: 7, Total energy: 20.67 kWh
+2025-07-09 15:02:13,131 - smart_grid_simulation - INFO - Energy trading average price: $0.6202/kWh
+2025-07-09 15:02:13,172 - grid_nodes - INFO - Grid Operator received energy request: 9.19 kWh
+2025-07-09 15:02:13,172 - grid_nodes - INFO - Consumer 795274d2 requested 9.19 kWh at $0.20/kWh
+2025-07-09 15:02:13,308 - grid_nodes - INFO - Grid Operator received energy offer: 4.08 kWh
+2025-07-09 15:02:13,308 - grid_nodes - INFO - Prosumer ed23d52a offered 4.08 kWh at $0.13/kWh
+2025-07-09 15:02:14,374 - grid_nodes - INFO - Grid Operator executed trade: 4.08 kWh at $0.17/kWh
+2025-07-09 15:02:14,374 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:14,378 - blockchain - INFO - Block #4 added to the blockchain
+2025-07-09 15:02:14,378 - grid_nodes - INFO - Grid Operator created new block: Block(index=4, hash=006d59b8fe...)
+2025-07-09 15:02:15,554 - grid_nodes - INFO - Grid Operator received energy request: 7.46 kWh
+2025-07-09 15:02:15,555 - grid_nodes - INFO - Consumer 28bb3325 requested 7.46 kWh at $0.20/kWh
+2025-07-09 15:02:15,696 - grid_nodes - INFO - Grid Operator received energy offer: 6.58 kWh
+2025-07-09 15:02:15,696 - grid_nodes - INFO - Prosumer 937174aa offered 6.58 kWh at $0.18/kWh
+2025-07-09 15:02:16,006 - grid_nodes - INFO - Grid Operator executed trade: 6.58 kWh at $0.20/kWh
+2025-07-09 15:02:16,006 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:16,009 - blockchain - INFO - Block #5 added to the blockchain
+2025-07-09 15:02:16,009 - grid_nodes - INFO - Grid Operator created new block: Block(index=5, hash=001d755e50...)
+2025-07-09 15:02:17,509 - grid_nodes - INFO - Grid Operator received energy offer: 7.29 kWh
+2025-07-09 15:02:17,509 - grid_nodes - INFO - Prosumer 1860eae6 offered 7.29 kWh at $0.18/kWh
+2025-07-09 15:02:17,513 - grid_nodes - INFO - Grid Operator received energy request: 13.50 kWh
+2025-07-09 15:02:17,514 - grid_nodes - INFO - Consumer 9f4dd70d requested 13.50 kWh at $0.22/kWh
+2025-07-09 15:02:17,796 - grid_nodes - INFO - Grid Operator executed trade: 1.42 kWh at $0.20/kWh
+2025-07-09 15:02:17,797 - grid_nodes - INFO - Grid Operator executed trade: 5.87 kWh at $0.20/kWh
+2025-07-09 15:02:17,797 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:17,944 - grid_nodes - INFO - Grid Operator received energy offer: 4.35 kWh
+2025-07-09 15:02:17,944 - grid_nodes - INFO - Prosumer f983fb87 offered 4.35 kWh at $0.12/kWh
+2025-07-09 15:02:18,463 - grid_nodes - INFO - Grid Operator received energy request: 11.52 kWh
+2025-07-09 15:02:18,463 - grid_nodes - INFO - Consumer 4cc88b1c requested 11.52 kWh at $0.23/kWh
+2025-07-09 15:02:18,594 - grid_nodes - INFO - Grid Operator received energy request: 6.17 kWh
+2025-07-09 15:02:18,595 - grid_nodes - INFO - Consumer 88ed9a75 requested 6.17 kWh at $0.17/kWh
+2025-07-09 15:02:19,140 - grid_nodes - INFO - Grid Operator executed trade: 4.35 kWh at $0.18/kWh
+2025-07-09 15:02:19,140 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:19,400 - grid_nodes - INFO - Grid Operator received energy request: 5.91 kWh
+2025-07-09 15:02:19,400 - grid_nodes - INFO - Consumer dee49475 requested 5.91 kWh at $0.16/kWh
+2025-07-09 15:02:20,674 - grid_nodes - INFO - Grid Operator received energy request: 10.40 kWh
+2025-07-09 15:02:20,674 - grid_nodes - INFO - Consumer fb33008a requested 10.40 kWh at $0.24/kWh
+2025-07-09 15:02:21,005 - blockchain - INFO - Block #6 added to the blockchain
+2025-07-09 15:02:21,005 - grid_nodes - INFO - Grid Operator created new block: Block(index=6, hash=00117450bf...)
+2025-07-09 15:02:21,251 - grid_nodes - INFO - Grid Operator received energy request: 10.21 kWh
+2025-07-09 15:02:21,251 - grid_nodes - INFO - Consumer 71e68c3e requested 10.21 kWh at $0.15/kWh
+2025-07-09 15:02:23,132 - smart_grid_simulation - INFO - Simulation stats: 7 blocks, 52 transactions
+2025-07-09 15:02:23,132 - smart_grid_simulation - INFO - Energy trades executed: 12, Total energy: 42.97 kWh
+2025-07-09 15:02:23,132 - smart_grid_simulation - INFO - Energy trading average price: $0.7131/kWh
+2025-07-09 15:02:23,180 - grid_nodes - INFO - Grid Operator received energy offer: 5.30 kWh
+2025-07-09 15:02:23,181 - grid_nodes - INFO - Prosumer 1860eae6 offered 5.30 kWh at $0.17/kWh
+2025-07-09 15:02:23,410 - grid_nodes - INFO - Grid Operator executed trade: 5.30 kWh at $0.20/kWh
+2025-07-09 15:02:23,410 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:23,582 - grid_nodes - INFO - Grid Operator received energy request: 0.58 kWh
+2025-07-09 15:02:23,582 - grid_nodes - INFO - Prosumer 11f5975e requested 0.58 kWh at $0.20/kWh
+2025-07-09 15:02:26,661 - grid_nodes - INFO - Grid Operator received energy offer: 0.46 kWh
+2025-07-09 15:02:26,661 - grid_nodes - INFO - Prosumer ed23d52a offered 0.46 kWh at $0.13/kWh
+2025-07-09 15:02:27,832 - grid_nodes - INFO - Grid Operator received energy request: 8.59 kWh
+2025-07-09 15:02:27,832 - grid_nodes - INFO - Consumer 795274d2 requested 8.59 kWh at $0.20/kWh
+2025-07-09 15:02:28,585 - grid_nodes - INFO - Grid Operator received energy offer: 2.06 kWh
+2025-07-09 15:02:28,585 - grid_nodes - INFO - Prosumer 937174aa offered 2.06 kWh at $0.17/kWh
+2025-07-09 15:02:28,908 - grid_nodes - INFO - Grid Operator executed trade: 0.46 kWh at $0.18/kWh
+2025-07-09 15:02:28,908 - grid_nodes - INFO - Grid Operator executed trade: 2.06 kWh at $0.21/kWh
+2025-07-09 15:02:28,908 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:30,752 - blockchain - INFO - Block #7 added to the blockchain
+2025-07-09 15:02:30,752 - grid_nodes - INFO - Grid Operator created new block: Block(index=7, hash=00116949a4...)
+2025-07-09 15:02:30,942 - grid_nodes - INFO - Grid Operator received energy request: 9.99 kWh
+2025-07-09 15:02:30,943 - grid_nodes - INFO - Consumer 9f4dd70d requested 9.99 kWh at $0.22/kWh
+2025-07-09 15:02:31,317 - grid_nodes - INFO - Grid Operator received energy offer: 4.52 kWh
+2025-07-09 15:02:31,317 - grid_nodes - INFO - Prosumer 1860eae6 offered 4.52 kWh at $0.17/kWh
+2025-07-09 15:02:31,600 - grid_nodes - INFO - Grid Operator received energy request: 9.74 kWh
+2025-07-09 15:02:31,600 - grid_nodes - INFO - Consumer 71e68c3e requested 9.74 kWh at $0.15/kWh
+2025-07-09 15:02:31,867 - grid_nodes - INFO - Grid Operator received energy request: 12.01 kWh
+2025-07-09 15:02:31,867 - grid_nodes - INFO - Consumer fb33008a requested 12.01 kWh at $0.23/kWh
+2025-07-09 15:02:32,534 - grid_nodes - INFO - Grid Operator received energy request: 1.13 kWh
+2025-07-09 15:02:32,534 - grid_nodes - INFO - Prosumer f983fb87 requested 1.13 kWh at $0.13/kWh
+2025-07-09 15:02:32,675 - grid_nodes - INFO - Grid Operator received energy request: 7.01 kWh
+2025-07-09 15:02:32,675 - grid_nodes - INFO - Consumer 88ed9a75 requested 7.01 kWh at $0.18/kWh
+2025-07-09 15:02:33,133 - smart_grid_simulation - INFO - Simulation stats: 8 blocks, 64 transactions
+2025-07-09 15:02:33,134 - smart_grid_simulation - INFO - Energy trades executed: 15, Total energy: 50.79 kWh
+2025-07-09 15:02:33,134 - smart_grid_simulation - INFO - Energy trading average price: $0.6765/kWh
+2025-07-09 15:02:33,732 - grid_nodes - INFO - Grid Operator executed trade: 2.58 kWh at $0.20/kWh
+2025-07-09 15:02:33,732 - grid_nodes - INFO - Grid Operator executed trade: 1.94 kWh at $0.20/kWh
+2025-07-09 15:02:33,732 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:33,739 - blockchain - INFO - Block #8 added to the blockchain
+2025-07-09 15:02:33,739 - grid_nodes - INFO - Grid Operator created new block: Block(index=8, hash=00fdf4df21...)
+2025-07-09 15:02:34,105 - grid_nodes - INFO - Grid Operator received energy request: 11.63 kWh
+2025-07-09 15:02:34,105 - grid_nodes - INFO - Consumer 4cc88b1c requested 11.63 kWh at $0.23/kWh
+2025-07-09 15:02:34,210 - grid_nodes - INFO - Grid Operator received energy request: 7.89 kWh
+2025-07-09 15:02:34,210 - grid_nodes - INFO - Consumer 28bb3325 requested 7.89 kWh at $0.20/kWh
+2025-07-09 15:02:35,545 - grid_nodes - INFO - Grid Operator received energy request: 6.13 kWh
+2025-07-09 15:02:35,545 - grid_nodes - INFO - Consumer dee49475 requested 6.13 kWh at $0.16/kWh
+2025-07-09 15:02:37,587 - grid_nodes - INFO - Grid Operator received energy request: 0.84 kWh
+2025-07-09 15:02:37,587 - grid_nodes - INFO - Prosumer 11f5975e requested 0.84 kWh at $0.21/kWh
+2025-07-09 15:02:37,954 - blockchain - INFO - Block #9 added to the blockchain
+2025-07-09 15:02:37,954 - grid_nodes - INFO - Grid Operator created new block: Block(index=9, hash=009e0eeebc...)
+2025-07-09 15:02:38,572 - grid_nodes - INFO - Grid Operator received energy offer: 4.23 kWh
+2025-07-09 15:02:38,572 - grid_nodes - INFO - Prosumer 937174aa offered 4.23 kWh at $0.17/kWh
+2025-07-09 15:02:39,253 - grid_nodes - INFO - Grid Operator executed trade: 4.23 kWh at $0.20/kWh
+2025-07-09 15:02:39,253 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:39,254 - blockchain - INFO - Block #10 added to the blockchain
+2025-07-09 15:02:39,254 - grid_nodes - INFO - Grid Operator created new block: Block(index=10, hash=00a888c888...)
+2025-07-09 15:02:39,837 - grid_nodes - INFO - Grid Operator received energy offer: 2.06 kWh
+2025-07-09 15:02:39,837 - grid_nodes - INFO - Prosumer ed23d52a offered 2.06 kWh at $0.12/kWh
+2025-07-09 15:02:40,758 - grid_nodes - INFO - Grid Operator received energy offer: 4.26 kWh
+2025-07-09 15:02:40,758 - grid_nodes - INFO - Prosumer 1860eae6 offered 4.26 kWh at $0.16/kWh
+2025-07-09 15:02:40,847 - grid_nodes - INFO - Grid Operator executed trade: 2.06 kWh at $0.18/kWh
+2025-07-09 15:02:40,848 - grid_nodes - INFO - Grid Operator executed trade: 3.77 kWh at $0.20/kWh
+2025-07-09 15:02:40,848 - grid_nodes - INFO - Grid Operator executed trade: 0.49 kWh at $0.20/kWh
+2025-07-09 15:02:40,848 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:40,849 - blockchain - INFO - Block #11 added to the blockchain
+2025-07-09 15:02:40,849 - grid_nodes - INFO - Grid Operator created new block: Block(index=11, hash=00fce8cf84...)
+2025-07-09 15:02:40,994 - grid_nodes - INFO - Grid Operator received energy offer: 2.74 kWh
+2025-07-09 15:02:40,994 - grid_nodes - INFO - Prosumer f983fb87 offered 2.74 kWh at $0.12/kWh
+2025-07-09 15:02:43,044 - grid_nodes - INFO - Grid Operator received energy request: 11.54 kWh
+2025-07-09 15:02:43,044 - grid_nodes - INFO - Consumer 71e68c3e requested 11.54 kWh at $0.15/kWh
+2025-07-09 15:02:43,134 - smart_grid_simulation - INFO - Simulation stats: 12 blocks, 89 transactions
+2025-07-09 15:02:43,135 - smart_grid_simulation - INFO - Energy trades executed: 21, Total energy: 65.87 kWh
+2025-07-09 15:02:43,135 - smart_grid_simulation - INFO - Energy trading average price: $0.6252/kWh
+2025-07-09 15:02:43,440 - grid_nodes - INFO - Grid Operator executed trade: 2.74 kWh at $0.18/kWh
+2025-07-09 15:02:43,440 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:44,757 - grid_nodes - INFO - Grid Operator received energy request: 13.70 kWh
+2025-07-09 15:02:44,758 - grid_nodes - INFO - Consumer 9f4dd70d requested 13.70 kWh at $0.21/kWh
+2025-07-09 15:02:44,770 - grid_nodes - INFO - Grid Operator received energy offer: 6.23 kWh
+2025-07-09 15:02:44,770 - grid_nodes - INFO - Prosumer 937174aa offered 6.23 kWh at $0.17/kWh
+2025-07-09 15:02:45,718 - grid_nodes - INFO - Grid Operator executed trade: 3.94 kWh at $0.20/kWh
+2025-07-09 15:02:45,718 - grid_nodes - INFO - Grid Operator executed trade: 2.29 kWh at $0.20/kWh
+2025-07-09 15:02:45,719 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:45,722 - blockchain - INFO - Block #12 added to the blockchain
+2025-07-09 15:02:45,723 - grid_nodes - INFO - Grid Operator created new block: Block(index=12, hash=006216839a...)
+2025-07-09 15:02:46,060 - grid_nodes - INFO - Grid Operator received energy request: 7.17 kWh
+2025-07-09 15:02:46,060 - grid_nodes - INFO - Consumer 28bb3325 requested 7.17 kWh at $0.20/kWh
+2025-07-09 15:02:47,000 - grid_nodes - INFO - Grid Operator received energy request: 10.19 kWh
+2025-07-09 15:02:47,000 - grid_nodes - INFO - Consumer fb33008a requested 10.19 kWh at $0.23/kWh
+2025-07-09 15:02:47,809 - grid_nodes - INFO - Grid Operator received energy request: 11.84 kWh
+2025-07-09 15:02:47,810 - grid_nodes - INFO - Consumer 795274d2 requested 11.84 kWh at $0.20/kWh
+2025-07-09 15:02:48,081 - grid_nodes - INFO - Grid Operator received energy request: 8.78 kWh
+2025-07-09 15:02:48,081 - grid_nodes - INFO - Consumer 88ed9a75 requested 8.78 kWh at $0.17/kWh
+2025-07-09 15:02:50,108 - blockchain - INFO - Block #13 added to the blockchain
+2025-07-09 15:02:50,108 - grid_nodes - INFO - Grid Operator created new block: Block(index=13, hash=00356a107d...)
+2025-07-09 15:02:50,887 - grid_nodes - INFO - Grid Operator received energy request: 1.42 kWh
+2025-07-09 15:02:50,887 - grid_nodes - INFO - Prosumer ed23d52a requested 1.42 kWh at $0.13/kWh
+2025-07-09 15:02:51,041 - grid_nodes - INFO - Grid Operator received energy offer: 0.22 kWh
+2025-07-09 15:02:51,042 - grid_nodes - INFO - Prosumer 11f5975e offered 0.22 kWh at $0.20/kWh
+2025-07-09 15:02:51,059 - grid_nodes - INFO - Grid Operator received energy request: 6.33 kWh
+2025-07-09 15:02:51,059 - grid_nodes - INFO - Consumer dee49475 requested 6.33 kWh at $0.16/kWh
+2025-07-09 15:02:51,345 - grid_nodes - INFO - Grid Operator received energy request: 9.78 kWh
+2025-07-09 15:02:51,345 - grid_nodes - INFO - Consumer 4cc88b1c requested 9.78 kWh at $0.24/kWh
+2025-07-09 15:02:52,497 - grid_nodes - INFO - Grid Operator received energy offer: 1.56 kWh
+2025-07-09 15:02:52,497 - grid_nodes - INFO - Prosumer 937174aa offered 1.56 kWh at $0.16/kWh
+2025-07-09 15:02:52,766 - grid_nodes - INFO - Grid Operator received energy offer: 0.71 kWh
+2025-07-09 15:02:52,766 - grid_nodes - INFO - Prosumer f983fb87 offered 0.71 kWh at $0.11/kWh
+2025-07-09 15:02:53,066 - grid_nodes - INFO - Grid Operator executed trade: 0.71 kWh at $0.18/kWh
+2025-07-09 15:02:53,066 - grid_nodes - INFO - Grid Operator executed trade: 1.56 kWh at $0.20/kWh
+2025-07-09 15:02:53,066 - grid_nodes - INFO - Grid Operator executed trade: 0.22 kWh at $0.22/kWh
+2025-07-09 15:02:53,066 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:53,136 - smart_grid_simulation - INFO - Simulation stats: 14 blocks, 103 transactions
+2025-07-09 15:02:53,136 - smart_grid_simulation - INFO - Energy trades executed: 27, Total energy: 77.34 kWh
+2025-07-09 15:02:53,136 - smart_grid_simulation - INFO - Energy trading average price: $0.5682/kWh
+2025-07-09 15:02:53,921 - grid_nodes - INFO - Grid Operator received energy offer: 2.97 kWh
+2025-07-09 15:02:53,921 - grid_nodes - INFO - Prosumer 1860eae6 offered 2.97 kWh at $0.15/kWh
+2025-07-09 15:02:54,529 - grid_nodes - INFO - Grid Operator executed trade: 2.97 kWh at $0.19/kWh
+2025-07-09 15:02:54,529 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:54,540 - blockchain - INFO - Block #14 added to the blockchain
+2025-07-09 15:02:54,540 - grid_nodes - INFO - Grid Operator created new block: Block(index=14, hash=0036a2cb99...)
+2025-07-09 15:02:55,948 - grid_nodes - INFO - Grid Operator received energy offer: 0.78 kWh
+2025-07-09 15:02:55,948 - grid_nodes - INFO - Prosumer ed23d52a offered 0.78 kWh at $0.12/kWh
+2025-07-09 15:02:57,959 - grid_nodes - INFO - Grid Operator received energy request: 10.02 kWh
+2025-07-09 15:02:57,959 - grid_nodes - INFO - Consumer fb33008a requested 10.02 kWh at $0.23/kWh
+2025-07-09 15:02:58,385 - grid_nodes - INFO - Grid Operator executed trade: 0.78 kWh at $0.18/kWh
+2025-07-09 15:02:58,385 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:02:58,390 - blockchain - INFO - Block #15 added to the blockchain
+2025-07-09 15:02:58,390 - grid_nodes - INFO - Grid Operator created new block: Block(index=15, hash=00cc11c003...)
+2025-07-09 15:02:58,573 - grid_nodes - INFO - Grid Operator received energy request: 6.75 kWh
+2025-07-09 15:02:58,573 - grid_nodes - INFO - Consumer 88ed9a75 requested 6.75 kWh at $0.17/kWh
+2025-07-09 15:02:58,715 - grid_nodes - INFO - Grid Operator received energy offer: 4.76 kWh
+2025-07-09 15:02:58,715 - grid_nodes - INFO - Prosumer f983fb87 offered 4.76 kWh at $0.11/kWh
+2025-07-09 15:02:59,068 - grid_nodes - INFO - Grid Operator received energy request: 11.21 kWh
+2025-07-09 15:02:59,069 - grid_nodes - INFO - Consumer 9f4dd70d requested 11.21 kWh at $0.21/kWh
+2025-07-09 15:02:59,879 - grid_nodes - INFO - Grid Operator received energy request: 9.60 kWh
+2025-07-09 15:02:59,879 - grid_nodes - INFO - Consumer 71e68c3e requested 9.60 kWh at $0.15/kWh
+2025-07-09 15:03:00,602 - grid_nodes - INFO - Grid Operator executed trade: 3.53 kWh at $0.17/kWh
+2025-07-09 15:03:00,603 - grid_nodes - INFO - Grid Operator executed trade: 1.22 kWh at $0.17/kWh
+2025-07-09 15:03:00,603 - grid_nodes - INFO - Grid balance after matching: 0.00 kWh
+2025-07-09 15:03:01,699 - grid_nodes - INFO - Grid Operator received energy offer: 5.68 kWh
+2025-07-09 15:03:01,699 - grid_nodes - INFO - Prosumer 1860eae6 offered 5.68 kWh at $0.15/kWh
+2025-07-09 15:03:02,137 - smart_grid_simulation - INFO - Simulation duration (60s) reached
+2025-07-09 15:03:02,137 - smart_grid_simulation - INFO - Stopping simulation...
+2025-07-09 15:03:02,622 - grid_nodes - INFO - Grid Operator received energy request: 0.81 kWh
+2025-07-09 15:03:02,622 - grid_nodes - INFO - Prosumer 11f5975e requested 0.81 kWh at $0.21/kWh
+2025-07-09 15:03:02,901 - grid_nodes - INFO - Grid Operator received energy request: 9.56 kWh
+2025-07-09 15:03:02,901 - grid_nodes - INFO - Consumer 795274d2 requested 9.56 kWh at $0.20/kWh
+2025-07-09 15:03:02,968 - grid_nodes - INFO - GridOperator GRID_OPE stopped
+2025-07-09 15:03:03,010 - grid_nodes - INFO - Grid Operator received energy request: 6.59 kWh
+2025-07-09 15:03:03,010 - grid_nodes - INFO - Consumer 28bb3325 requested 6.59 kWh at $0.20/kWh
+2025-07-09 15:03:03,659 - grid_nodes - INFO - Grid Operator received energy request: 8.49 kWh
+2025-07-09 15:03:03,659 - grid_nodes - INFO - Consumer dee49475 requested 8.49 kWh at $0.16/kWh
+2025-07-09 15:03:04,968 - grid_nodes - INFO - Prosumer f983fb87 stopped
+2025-07-09 15:03:05,840 - grid_nodes - INFO - Grid Operator received energy offer: 2.24 kWh
+2025-07-09 15:03:05,840 - grid_nodes - INFO - Prosumer 937174aa offered 2.24 kWh at $0.16/kWh
+2025-07-09 15:03:06,304 - grid_nodes - INFO - Grid Operator received energy request: 9.19 kWh
+2025-07-09 15:03:06,305 - grid_nodes - INFO - Consumer 4cc88b1c requested 9.19 kWh at $0.24/kWh
+2025-07-09 15:03:06,969 - grid_nodes - INFO - Prosumer 1860eae6 stopped
+2025-07-09 15:03:08,519 - grid_nodes - INFO - Grid Operator received energy offer: 1.49 kWh
+2025-07-09 15:03:08,519 - grid_nodes - INFO - Prosumer ed23d52a offered 1.49 kWh at $0.12/kWh
+2025-07-09 15:03:08,633 - grid_nodes - INFO - Grid Operator received energy request: 11.75 kWh
+2025-07-09 15:03:08,633 - grid_nodes - INFO - Consumer fb33008a requested 11.75 kWh at $0.23/kWh
+2025-07-09 15:03:08,969 - grid_nodes - INFO - Prosumer 937174aa stopped
+2025-07-09 15:03:10,969 - grid_nodes - INFO - Prosumer 11f5975e stopped
+2025-07-09 15:03:12,969 - grid_nodes - INFO - Prosumer ed23d52a stopped
+2025-07-09 15:03:13,426 - grid_nodes - INFO - Grid Operator received energy request: 9.71 kWh
+2025-07-09 15:03:13,426 - grid_nodes - INFO - Consumer 71e68c3e requested 9.71 kWh at $0.15/kWh
+2025-07-09 15:03:14,970 - grid_nodes - INFO - Consumer fb33008a stopped
+2025-07-09 15:03:15,288 - grid_nodes - INFO - Grid Operator received energy request: 11.48 kWh
+2025-07-09 15:03:15,288 - grid_nodes - INFO - Consumer 795274d2 requested 11.48 kWh at $0.20/kWh
+2025-07-09 15:03:15,441 - grid_nodes - INFO - Grid Operator received energy request: 6.95 kWh
+2025-07-09 15:03:15,441 - grid_nodes - INFO - Consumer 88ed9a75 requested 6.95 kWh at $0.17/kWh
+2025-07-09 15:03:16,970 - grid_nodes - INFO - Consumer 71e68c3e stopped
+2025-07-09 15:03:17,397 - grid_nodes - INFO - Grid Operator received energy request: 10.43 kWh
+2025-07-09 15:03:17,398 - grid_nodes - INFO - Consumer 9f4dd70d requested 10.43 kWh at $0.21/kWh
+2025-07-09 15:03:18,970 - grid_nodes - INFO - Consumer 28bb3325 stopped
+2025-07-09 15:03:20,971 - grid_nodes - INFO - Consumer 9f4dd70d stopped
+2025-07-09 15:03:22,725 - grid_nodes - INFO - Consumer dee49475 stopped
+2025-07-09 15:03:24,725 - grid_nodes - INFO - Consumer 4cc88b1c stopped
+2025-07-09 15:03:26,725 - grid_nodes - INFO - Consumer 795274d2 stopped
+2025-07-09 15:03:28,725 - grid_nodes - INFO - Consumer 88ed9a75 stopped
+2025-07-09 15:03:28,726 - smart_grid_simulation - INFO - Simulation stats: 16 blocks, 122 transactions
+2025-07-09 15:03:28,726 - smart_grid_simulation - INFO - Energy trades executed: 31, Total energy: 85.84 kWh
+2025-07-09 15:03:28,726 - smart_grid_simulation - INFO - Energy trading average price: $0.5447/kWh
+2025-07-09 15:03:28,726 - smart_grid_simulation - INFO - Simulation completed in 86.91 seconds
