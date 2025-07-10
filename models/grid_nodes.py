@@ -6,7 +6,7 @@ import logging
 import threading
 from typing import Dict, List, Any, Optional
 
-# Get the logger instance for this module
+
 logger = logging.getLogger(__name__)
 
 SIMULATION_SPEED_FACTOR = 360
@@ -133,11 +133,11 @@ class BaseNode:
                 self._save_to_db()
             elif transaction['type'] == 'energy_delivery' and hasattr(self, 'energy_storage'):
                 self.energy_storage = min(self.max_storage, self.energy_storage + transaction['energy'] * self.storage_efficiency)
-                logger.info(f"Node {self.node_id} received {transaction['energy']:.2f} kWh, storage is now {self.energy_storage:.2f} kWh.")
+                # Calculate price per kWh
+                price_per_kwh = transaction['amount'] / transaction['energy'] if transaction['energy'] > 0 else 0
+                logger.info(f"Node {self.node_id} received {transaction['energy']:.2f} kWh at {price_per_kwh:.4f} $/kWh (total: ${transaction['amount']:.2f}), storage is now {self.energy_storage:.2f} kWh.")
                 self.create_transaction(transaction['sender'], transaction['amount'], 0, 'energy_payment')
-                # State will be saved by create_transaction
-
-# --- GridOperator Class ---
+ 
 class GridOperator(BaseNode):
     def __init__(self, node_id: str, wallet_balance: float):
         super().__init__(node_id, wallet_balance)
