@@ -1,259 +1,130 @@
-2025-07-10 08:55:00,463 - root - INFO - Initializing blockchain (difficulty=4)
+2025-07-10 09:34:15,919 - root - INFO - Initializing blockchain (difficulty=4)
 --- Script starting ---
 --- Logging configured. Output will go to terminal and /home/m2l3k/Desktop/BlockchainNode/smartgrid_simulation.log ---
 --- Custom modules imported successfully ---
 --- Script is being run directly ---
 --- Main function starting ---
-2025-07-10 08:55:00,463 - root - INFO - Initializing blockchain (difficulty=4)
-2025-07-10 08:55:00,543 - blockchain - INFO - Genesis block created: 00003defe2c9
-2025-07-10 08:55:00,543 - blockchain - INFO - Genesis block created: 00003defe2c9
-2025-07-10 08:55:00,544 - root - INFO - Creating grid operator node
-2025-07-10 08:55:00,544 - root - INFO - Creating grid operator node
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node GRID-OP-01 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node GRID-OP-01 registered.
-2025-07-10 08:55:00,544 - root - INFO - Creating 5 prosumer nodes
-2025-07-10 08:55:00,544 - root - INFO - Creating 5 prosumer nodes
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-00 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-00 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-01 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-01 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-02 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-02 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-03 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-03 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-04 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-04 registered.
-2025-07-10 08:55:00,544 - root - INFO - Creating 10 consumer nodes
-2025-07-10 08:55:00,544 - root - INFO - Creating 10 consumer nodes
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-00 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-00 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-01 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-01 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-02 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-02 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-03 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-03 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-04 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-04 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-05 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-05 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-06 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-06 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-07 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-07 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-08 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-08 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-09 registered.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node CON-09 registered.
-2025-07-10 08:55:00,544 - root - INFO - Connecting all nodes to the main grid operator.
-2025-07-10 08:55:00,544 - root - INFO - Connecting all nodes to the main grid operator.
-2025-07-10 08:55:00,544 - root - INFO - --- Starting Simulation Run ---
+2025-07-10 09:34:15,919 - root - INFO - Initializing blockchain (difficulty=4)
+2025-07-10 09:34:15,931 - db_utils - INFO - Connected to database: smartgrid
+2025-07-10 09:34:15,931 - db_utils - INFO - Connected to database: smartgrid
+2025-07-10 09:34:15,932 - db_utils - INFO - Using database: smartgrid
+2025-07-10 09:34:15,932 - db_utils - INFO - Using database: smartgrid
+2025-07-10 09:34:15,932 - db_utils - INFO - Database tables created or already exist
+2025-07-10 09:34:15,932 - db_utils - INFO - Database tables created or already exist
+2025-07-10 09:34:15,932 - blockchain - INFO - Database connection established
+2025-07-10 09:34:15,932 - blockchain - INFO - Database connection established
+2025-07-10 09:34:16,013 - blockchain - INFO - Genesis block created: 000079b52336
+2025-07-10 09:34:16,013 - root - INFO - Creating grid operator node
+2025-07-10 09:34:16,013 - blockchain - INFO - Genesis block created: 000079b52336
+2025-07-10 09:34:16,013 - root - INFO - Creating grid operator node
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node GRID-OP-01 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node GRID-OP-01 registered.
+2025-07-10 09:34:16,013 - root - INFO - Creating 5 prosumer nodes
+2025-07-10 09:34:16,013 - root - INFO - Creating 5 prosumer nodes
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-00 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-00 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-01 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-01 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-02 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-02 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-03 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-03 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-04 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node PRO-04 registered.
+2025-07-10 09:34:16,013 - root - INFO - Creating 10 consumer nodes
+2025-07-10 09:34:16,013 - root - INFO - Creating 10 consumer nodes
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-00 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-00 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-01 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-01 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-02 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-02 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-03 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-03 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-04 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-05 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-04 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-05 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-06 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-06 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-07 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-07 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-08 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-08 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-09 registered.
+2025-07-10 09:34:16,013 - models.grid_nodes - INFO - Node CON-09 registered.
+2025-07-10 09:34:16,013 - root - INFO - Connecting all nodes to the main grid operator.
+2025-07-10 09:34:16,013 - root - INFO - Connecting all nodes to the main grid operator.
+2025-07-10 09:34:16,013 - root - INFO - --- Starting Simulation Run ---
 --- Simulation class initialized ---
-2025-07-10 08:55:00,544 - root - INFO - --- Starting Simulation Run ---
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - GridOperator GRID-OP-01 started.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - GridOperator GRID-OP-01 started.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-00 started.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-00 started.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-01 started.
-2025-07-10 08:55:00,544 - models.grid_nodes - INFO - Node PRO-01 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node PRO-02 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node PRO-02 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node PRO-03 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node PRO-03 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node PRO-04 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node PRO-04 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-00 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-00 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-01 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-01 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-02 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-02 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-03 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-03 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-04 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-04 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-05 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-05 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-06 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-06 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-07 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-07 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-08 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-08 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-09 started.
-2025-07-10 08:55:00,545 - models.grid_nodes - INFO - Node CON-09 started.
-2025-07-10 08:55:15,547 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 6.47 kWh
-2025-07-10 08:55:15,547 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 6.47 kWh
-2025-07-10 08:55:30,548 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 0.00 kWh
-2025-07-10 08:55:30,548 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 0.00 kWh
-2025-07-10 08:55:45,550 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 6.93 kWh
-2025-07-10 08:55:45,550 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 6.93 kWh
-2025-07-10 08:56:00,551 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 33.22 kWh
-2025-07-10 08:56:00,551 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 33.22 kWh
-2025-07-10 08:56:15,546 - models.grid_nodes - INFO - GridOperator cleared 5 trades.
-2025-07-10 08:56:15,546 - models.grid_nodes - INFO - GridOperator cleared 5 trades.
-2025-07-10 08:56:15,552 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 58.06 kWh
-2025-07-10 08:56:15,552 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 58.06 kWh
-2025-07-10 08:56:19,716 - blockchain - INFO - Block #1 added. Miner: GRID-OP-01, Txs: 5
-2025-07-10 08:56:19,716 - blockchain - INFO - Block #1 added. Miner: GRID-OP-01, Txs: 5
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-00 received 3.35 kWh, storage is now 3.18 kWh.
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-00 received 3.35 kWh, storage is now 3.18 kWh.
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-00 received 0.46 kWh, storage is now 3.62 kWh.
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-00 received 0.46 kWh, storage is now 3.62 kWh.
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-02 received 1.91 kWh, storage is now 1.81 kWh.
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-02 received 1.91 kWh, storage is now 1.81 kWh.
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-06 received 1.50 kWh, storage is now 1.43 kWh.
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-06 received 1.50 kWh, storage is now 1.43 kWh.
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-05 received 2.45 kWh, storage is now 2.32 kWh.
-2025-07-10 08:56:19,716 - models.grid_nodes - INFO - Node CON-05 received 2.45 kWh, storage is now 2.32 kWh.
-2025-07-10 08:56:20,546 - models.grid_nodes - INFO - GridOperator cleared 3 trades.
-2025-07-10 08:56:20,546 - models.grid_nodes - INFO - GridOperator cleared 3 trades.
-2025-07-10 08:56:22,091 - blockchain - INFO - Block #2 added. Miner: GRID-OP-01, Txs: 3
-2025-07-10 08:56:22,091 - models.grid_nodes - INFO - Node CON-06 received 0.03 kWh, storage is now 1.46 kWh.
-2025-07-10 08:56:22,091 - blockchain - INFO - Block #2 added. Miner: GRID-OP-01, Txs: 3
-2025-07-10 08:56:22,091 - models.grid_nodes - INFO - Node CON-06 received 0.03 kWh, storage is now 1.46 kWh.
-2025-07-10 08:56:22,091 - models.grid_nodes - INFO - Node CON-06 received 2.70 kWh, storage is now 4.02 kWh.
-2025-07-10 08:56:22,091 - models.grid_nodes - INFO - Node CON-06 received 2.70 kWh, storage is now 4.02 kWh.
-2025-07-10 08:56:22,091 - models.grid_nodes - INFO - Node CON-06 received 1.73 kWh, storage is now 5.00 kWh.
-2025-07-10 08:56:22,091 - models.grid_nodes - INFO - Node CON-06 received 1.73 kWh, storage is now 5.00 kWh.
-2025-07-10 08:56:25,547 - models.grid_nodes - INFO - GridOperator cleared 4 trades.
-2025-07-10 08:56:25,547 - models.grid_nodes - INFO - GridOperator cleared 4 trades.
-2025-07-10 08:56:27,460 - blockchain - INFO - Block #3 added. Miner: GRID-OP-01, Txs: 4
-2025-07-10 08:56:27,460 - blockchain - INFO - Block #3 added. Miner: GRID-OP-01, Txs: 4
-2025-07-10 08:56:27,461 - models.grid_nodes - INFO - Node CON-04 received 0.27 kWh, storage is now 0.25 kWh.
-2025-07-10 08:56:27,461 - models.grid_nodes - INFO - Node CON-04 received 0.27 kWh, storage is now 0.25 kWh.
-2025-07-10 08:56:27,461 - models.grid_nodes - INFO - Node CON-06 received 2.18 kWh, storage is now 5.00 kWh.
-2025-07-10 08:56:27,461 - models.grid_nodes - INFO - Node CON-06 received 2.18 kWh, storage is now 5.00 kWh.
-2025-07-10 08:56:27,461 - models.grid_nodes - INFO - Node CON-06 received 2.01 kWh, storage is now 5.00 kWh.
-2025-07-10 08:56:27,461 - models.grid_nodes - INFO - Node CON-06 received 2.01 kWh, storage is now 5.00 kWh.
-2025-07-10 08:56:27,461 - models.grid_nodes - INFO - Node CON-04 received 2.60 kWh, storage is now 2.73 kWh.
-2025-07-10 08:56:27,461 - models.grid_nodes - INFO - Node CON-04 received 2.60 kWh, storage is now 2.73 kWh.
-2025-07-10 08:56:30,547 - models.grid_nodes - INFO - GridOperator cleared 4 trades.
-2025-07-10 08:56:30,547 - models.grid_nodes - INFO - GridOperator cleared 4 trades.
-2025-07-10 08:56:30,579 - root - INFO - STATS | Blocks: 4, Txs: 12, Energy Traded: 21.19 kWh, Total Storage: 65.64 kWh
-2025-07-10 08:56:30,579 - root - INFO - STATS | Blocks: 4, Txs: 12, Energy Traded: 21.19 kWh, Total Storage: 65.64 kWh
-2025-07-10 08:56:33,304 - blockchain - INFO - Block #4 added. Miner: GRID-OP-01, Txs: 4
-2025-07-10 08:56:33,304 - blockchain - INFO - Block #4 added. Miner: GRID-OP-01, Txs: 4
-2025-07-10 08:56:33,304 - models.grid_nodes - INFO - Node CON-06 received 1.70 kWh, storage is now 2.41 kWh.
-2025-07-10 08:56:33,304 - models.grid_nodes - INFO - Node CON-06 received 1.70 kWh, storage is now 2.41 kWh.
-2025-07-10 08:56:33,304 - models.grid_nodes - INFO - Node CON-06 received 0.28 kWh, storage is now 2.68 kWh.
-2025-07-10 08:56:33,304 - models.grid_nodes - INFO - Node CON-06 received 0.28 kWh, storage is now 2.68 kWh.
-2025-07-10 08:56:33,304 - models.grid_nodes - INFO - Node CON-07 received 2.21 kWh, storage is now 2.10 kWh.
-2025-07-10 08:56:33,304 - models.grid_nodes - INFO - Node CON-07 received 2.21 kWh, storage is now 2.10 kWh.
-2025-07-10 08:56:33,304 - models.grid_nodes - INFO - Node CON-09 received 1.15 kWh, storage is now 1.09 kWh.
-2025-07-10 08:56:33,304 - models.grid_nodes - INFO - Node CON-09 received 1.15 kWh, storage is now 1.09 kWh.
-2025-07-10 08:56:35,548 - models.grid_nodes - INFO - GridOperator cleared 7 trades.
-2025-07-10 08:56:35,548 - models.grid_nodes - INFO - GridOperator cleared 7 trades.
-2025-07-10 08:56:38,969 - blockchain - INFO - Block #5 added. Miner: GRID-OP-01, Txs: 7
-2025-07-10 08:56:38,969 - blockchain - INFO - Block #5 added. Miner: GRID-OP-01, Txs: 7
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-06 received 0.70 kWh, storage is now 0.67 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-07 received 0.26 kWh, storage is now 0.25 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-04 received 1.98 kWh, storage is now 1.89 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-06 received 0.70 kWh, storage is now 0.67 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-07 received 0.26 kWh, storage is now 0.25 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-04 received 1.98 kWh, storage is now 1.89 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-04 received 0.04 kWh, storage is now 1.92 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-04 received 0.04 kWh, storage is now 1.92 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-08 received 2.39 kWh, storage is now 2.27 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-08 received 2.39 kWh, storage is now 2.27 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-06 received 0.68 kWh, storage is now 1.32 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-06 received 0.68 kWh, storage is now 1.32 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-09 received 0.71 kWh, storage is now 1.76 kWh.
-2025-07-10 08:56:38,969 - models.grid_nodes - INFO - Node CON-09 received 0.71 kWh, storage is now 1.76 kWh.
-2025-07-10 08:56:45,601 - root - INFO - STATS | Blocks: 6, Txs: 23, Energy Traded: 33.30 kWh, Total Storage: 61.54 kWh
-2025-07-10 08:56:45,601 - root - INFO - STATS | Blocks: 6, Txs: 23, Energy Traded: 33.30 kWh, Total Storage: 61.54 kWh
-2025-07-10 08:57:00,603 - root - INFO - Simulation duration (120s) reached
-2025-07-10 08:57:00,603 - root - INFO - Simulation duration (120s) reached
---- Main function finished ---
-2025-07-10 09:02:02,449 - root - INFO - Initializing blockchain (difficulty=4)
-2025-07-10 09:02:02,478 - db_utils - INFO - Connected to MySQL server without database
-2025-07-10 09:02:02,478 - db_utils - INFO - Using database: smartgrid
-2025-07-10 09:02:02,527 - db_utils - INFO - Database tables created or already exist
-2025-07-10 09:02:02,527 - blockchain - INFO - Database connection established
-2025-07-10 09:02:02,718 - blockchain - INFO - Genesis block created: 00004f5028ad
-2025-07-10 09:02:02,718 - root - INFO - Creating grid operator node
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node GRID-OP-01 registered.
-2025-07-10 09:02:02,718 - root - INFO - Creating 5 prosumer nodes
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node PRO-00 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node PRO-01 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node PRO-02 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node PRO-03 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node PRO-04 registered.
-2025-07-10 09:02:02,718 - root - INFO - Creating 10 consumer nodes
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-00 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-01 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-02 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-03 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-04 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-05 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-06 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-07 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-08 registered.
-2025-07-10 09:02:02,718 - models.grid_nodes - INFO - Node CON-09 registered.
-2025-07-10 09:02:02,719 - root - INFO - Connecting all nodes to the main grid operator.
-2025-07-10 09:02:02,719 - root - INFO - --- Starting Simulation Run ---
-2025-07-10 09:02:02,719 - models.grid_nodes - INFO - GridOperator GRID-OP-01 started.
-2025-07-10 09:02:02,719 - models.grid_nodes - INFO - Node PRO-00 started.
-2025-07-10 09:02:02,719 - models.grid_nodes - INFO - Node PRO-01 started.
-2025-07-10 09:02:02,719 - models.grid_nodes - INFO - Node PRO-02 started.
-2025-07-10 09:02:02,719 - models.grid_nodes - INFO - Node PRO-03 started.
-2025-07-10 09:02:02,719 - models.grid_nodes - INFO - Node PRO-04 started.
-2025-07-10 09:02:02,719 - models.grid_nodes - INFO - Node CON-00 started.
-2025-07-10 09:02:02,719 - models.grid_nodes - INFO - Node CON-01 started.
-2025-07-10 09:02:02,720 - models.grid_nodes - INFO - Node CON-02 started.
-2025-07-10 09:02:02,720 - models.grid_nodes - INFO - Node CON-03 started.
-2025-07-10 09:02:02,720 - models.grid_nodes - INFO - Node CON-04 started.
-2025-07-10 09:02:02,720 - models.grid_nodes - INFO - Node CON-05 started.
-2025-07-10 09:02:02,720 - models.grid_nodes - INFO - Node CON-06 started.
-2025-07-10 09:02:02,720 - models.grid_nodes - INFO - Node CON-07 started.
-2025-07-10 09:02:02,720 - models.grid_nodes - INFO - Node CON-08 started.
-2025-07-10 09:02:02,720 - models.grid_nodes - INFO - Node CON-09 started.
-2025-07-10 09:02:17,721 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 12.18 kWh
-2025-07-10 09:02:32,723 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 4.05 kWh
-2025-07-10 09:02:47,724 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 13.87 kWh
-2025-07-10 09:03:02,728 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 31.57 kWh
-2025-07-10 09:03:12,724 - models.grid_nodes - INFO - GridOperator cleared 1 trades.
-2025-07-10 09:03:13,635 - blockchain - INFO - Block #1 added. Miner: GRID-OP-01, Txs: 1
-2025-07-10 09:03:13,635 - models.grid_nodes - INFO - Node CON-08 received 1.95 kWh, storage is now 1.86 kWh.
-2025-07-10 09:03:17,730 - root - INFO - STATS | Blocks: 2, Txs: 1, Energy Traded: 1.95 kWh, Total Storage: 56.19 kWh
-2025-07-10 09:03:17,743 - models.grid_nodes - INFO - GridOperator cleared 4 trades.
-2025-07-10 09:03:21,152 - blockchain - INFO - Block #2 added. Miner: GRID-OP-01, Txs: 4
-2025-07-10 09:03:21,152 - models.grid_nodes - INFO - Node CON-08 received 1.10 kWh, storage is now 1.05 kWh.
-2025-07-10 09:03:21,152 - models.grid_nodes - INFO - Node CON-04 received 0.60 kWh, storage is now 0.57 kWh.
-2025-07-10 09:03:21,152 - models.grid_nodes - INFO - Node CON-08 received 2.79 kWh, storage is now 3.70 kWh.
-2025-07-10 09:03:21,152 - models.grid_nodes - INFO - Node CON-05 received 3.16 kWh, storage is now 3.01 kWh.
-2025-07-10 09:03:22,751 - models.grid_nodes - INFO - GridOperator cleared 6 trades.
-2025-07-10 09:03:23,438 - blockchain - INFO - Block #3 added. Miner: GRID-OP-01, Txs: 6
-2025-07-10 09:03:23,438 - models.grid_nodes - INFO - Node CON-02 received 1.71 kWh, storage is now 1.62 kWh.
-2025-07-10 09:03:23,441 - models.grid_nodes - INFO - Node CON-04 received 2.53 kWh, storage is now 2.40 kWh.
-2025-07-10 09:03:23,441 - models.grid_nodes - INFO - Node CON-02 received 1.24 kWh, storage is now 2.80 kWh.
-2025-07-10 09:03:23,441 - models.grid_nodes - INFO - Node CON-04 received 2.53 kWh, storage is now 4.80 kWh.
-2025-07-10 09:03:23,441 - models.grid_nodes - INFO - Node CON-04 received 3.05 kWh, storage is now 5.00 kWh.
-2025-07-10 09:03:23,441 - models.grid_nodes - INFO - Node CON-03 received 2.37 kWh, storage is now 2.25 kWh.
-2025-07-10 09:03:27,754 - models.grid_nodes - INFO - GridOperator cleared 2 trades.
-2025-07-10 09:03:30,033 - blockchain - INFO - Block #4 added. Miner: GRID-OP-01, Txs: 2
-2025-07-10 09:03:30,033 - models.grid_nodes - INFO - Node CON-03 received 1.70 kWh, storage is now 3.87 kWh.
-2025-07-10 09:03:30,033 - models.grid_nodes - INFO - Node CON-00 received 1.53 kWh, storage is now 1.45 kWh.
-2025-07-10 09:03:32,747 - root - INFO - STATS | Blocks: 5, Txs: 13, Energy Traded: 26.26 kWh, Total Storage: 58.53 kWh
-2025-07-10 09:03:32,761 - models.grid_nodes - INFO - GridOperator cleared 5 trades.
-2025-07-10 09:03:35,304 - blockchain - INFO - Block #5 added. Miner: GRID-OP-01, Txs: 5
-2025-07-10 09:03:35,304 - models.grid_nodes - INFO - Node CON-02 received 2.34 kWh, storage is now 2.22 kWh.
-2025-07-10 09:03:35,306 - models.grid_nodes - INFO - Node CON-07 received 0.10 kWh, storage is now 0.10 kWh.
-2025-07-10 09:03:35,306 - models.grid_nodes - INFO - Node CON-00 received 0.55 kWh, storage is now 0.52 kWh.
-2025-07-10 09:03:35,306 - models.grid_nodes - INFO - Node CON-04 received 1.30 kWh, storage is now 1.73 kWh.
-2025-07-10 09:03:35,306 - models.grid_nodes - INFO - Node CON-04 received 1.68 kWh, storage is now 3.33 kWh.
-2025-07-10 09:03:37,764 - models.grid_nodes - INFO - GridOperator cleared 1 trades.
-2025-07-10 09:03:39,542 - blockchain - INFO - Block #6 added. Miner: GRID-OP-01, Txs: 1
-2025-07-10 09:03:39,543 - models.grid_nodes - INFO - Node CON-07 received 1.56 kWh, storage is now 1.57 kWh.
-2025-07-10 09:03:42,772 - models.grid_nodes - INFO - GridOperator cleared 4 trades.
-2025-07-10 09:03:44,926 - blockchain - INFO - Block #7 added. Miner: GRID-OP-01, Txs: 4
-2025-07-10 09:03:44,926 - models.grid_nodes - INFO - Node CON-00 received 2.72 kWh, storage is now 2.59 kWh.
-2025-07-10 09:03:44,928 - models.grid_nodes - INFO - Node CON-07 received 1.96 kWh, storage is now 1.86 kWh.
-2025-07-10 09:03:44,931 - models.grid_nodes - INFO - Node CON-07 received 0.20 kWh, storage is now 2.05 kWh.
-2025-07-10 09:03:44,931 - models.grid_nodes - INFO - Node CON-03 received 0.67 kWh, storage is now 0.64 kWh.
-2025-07-10 09:03:47,763 - root - INFO - STATS | Blocks: 8, Txs: 23, Energy Traded: 39.35 kWh, Total Storage: 55.30 kWh
-2025-07-10 09:03:47,776 - models.grid_nodes - INFO - GridOperator cleared 2 trades.
-2025-07-10 09:03:51,013 - blockchain - INFO - Block #8 added. Miner: GRID-OP-01, Txs: 2
-2025-07-10 09:03:51,013 - models.grid_nodes - INFO - Node CON-08 received 0.82 kWh, storage is now 0.78 kWh.
-2025-07-10 09:03:51,013 - models.grid_nodes - INFO - Node CON-08 received 0.58 kWh, storage is now 1.33 kWh.
-2025-07-10 09:04:02,775 - root - INFO - Simulation duration (120s) reached
+2025-07-10 09:34:16,013 - root - INFO - --- Starting Simulation Run ---
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - GridOperator GRID-OP-01 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - GridOperator GRID-OP-01 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-00 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-01 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-02 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-03 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-00 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-01 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-02 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-03 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-04 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node PRO-04 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node CON-00 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node CON-00 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node CON-01 started.
+2025-07-10 09:34:16,014 - models.grid_nodes - INFO - Node CON-01 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-02 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-02 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-03 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-03 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-04 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-04 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-05 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-05 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-06 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-06 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-07 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-07 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-08 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-08 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-09 started.
+2025-07-10 09:34:16,015 - models.grid_nodes - INFO - Node CON-09 started.
+2025-07-10 09:34:31,016 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 14.73 kWh
+2025-07-10 09:34:31,016 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 14.73 kWh
+2025-07-10 09:34:46,017 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 9.38 kWh
+2025-07-10 09:34:46,017 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 9.38 kWh
+2025-07-10 09:35:01,019 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 18.57 kWh
+2025-07-10 09:35:01,019 - root - INFO - STATS | Blocks: 1, Txs: 0, Energy Traded: 0.00 kWh, Total Storage: 18.57 kWh
+2025-07-10 09:35:06,018 - models.grid_nodes - INFO - GridOperator cleared 1 trades.
+2025-07-10 09:35:06,018 - models.grid_nodes - INFO - GridOperator cleared 1 trades.
+2025-07-10 09:35:06,187 - blockchain - INFO - Block #1 added. Miner: GRID-OP-01, Txs: 1
+2025-07-10 09:35:06,187 - blockchain - INFO - Block #1 added. Miner: GRID-OP-01, Txs: 1
+2025-07-10 09:35:06,188 - models.grid_nodes - INFO - Node PRO-03 received 0.31 kWh, storage is now 2.74 kWh.
+2025-07-10 09:35:06,188 - models.grid_nodes - INFO - Node PRO-03 received 0.31 kWh, storage is now 2.74 kWh.
+2025-07-10 09:35:11,037 - models.grid_nodes - INFO - GridOperator cleared 4 trades.
+2025-07-10 09:35:11,037 - models.grid_nodes - INFO - GridOperator cleared 4 trades.
+2025-07-10 09:35:12,552 - blockchain - INFO - Block #2 added. Miner: GRID-OP-01, Txs: 4
+2025-07-10 09:35:12,552 - blockchain - INFO - Block #2 added. Miner: GRID-OP-01, Txs: 4
+2025-07-10 09:35:12,552 - models.grid_nodes - INFO - Node CON-01 received 1.38 kWh, storage is now 1.31 kWh.
+2025-07-10 09:35:12,552 - models.grid_nodes - INFO - Node CON-01 received 1.38 kWh, storage is now 1.31 kWh.
+2025-07-10 09:35:12,552 - models.grid_nodes - INFO - Node PRO-02 received 0.02 kWh, storage is now 1.01 kWh.
+2025-07-10 09:35:12,552 - models.grid_nodes - INFO - Node PRO-02 received 0.02 kWh, storage is now 1.01 kWh.
+2025-07-10 09:35:12,552 - models.grid_nodes - INFO - Node PRO-03 received 1.58 kWh, storage is now 5.83 kWh.
+2025-07-10 09:35:12,552 - models.grid_nodes - INFO - Node PRO-03 received 1.58 kWh, storage is now 5.83 kWh.
+2025-07-10 09:35:12,552 - models.grid_nodes - INFO - Node CON-07 received 2.67 kWh, storage is now 2.54 kWh.
+2025-07-10 09:35:12,552 - models.grid_nodes - INFO - Node CON-07 received 2.67 kWh, storage is now 2.54 kWh.
+2025-07-10 09:35:16,024 - root - INFO - STATS | Blocks: 3, Txs: 5, Energy Traded: 5.97 kWh, Total Storage: 38.52 kWh
+2025-07-10 09:35:16,024 - root - INFO - STATS | Blocks: 3, Txs: 5, Energy Traded: 5.97 kWh, Total Storage: 38.52 kWh
+2025-07-10 09:35:21,047 - models.grid_nodes - INFO - GridOperator cleared 3 trades.
+2025-07-10 09:35:21,047 - models.grid_nodes - INFO - GridOperator cleared 3 trades.
+2025-07-10 09:35:23,104 - blockchain - INFO - Block #3 added. Miner: GRID-OP-01, Txs: 3
+2025-07-10 09:35:23,104 - blockchain - INFO - Block #3 added. Miner: GRID-OP-01, Txs: 3
+2025-07-10 09:35:23,104 - models.grid_nodes - INFO - Node CON-00 received 1.12 kWh, storage is now 1.07 kWh.
+2025-07-10 09:35:23,104 - models.grid_nodes - INFO - Node CON-00 received 1.12 kWh, storage is now 1.07 kWh.
+2025-07-10 09:35:23,104 - models.grid_nodes - INFO - Node PRO-02 received 2.97 kWh, storage is now 4.01 kWh.
+2025-07-10 09:35:23,104 - models.grid_nodes - INFO - Node PRO-02 received 2.97 kWh, storage is now 4.01 kWh.
+2025-07-10 09:35:23,107 - models.grid_nodes - INFO - Node CON-05 received 2.84 kWh, storage is now 2.70 kWh.
+2025-07-10 09:35:23,107 - models.grid_nodes - INFO - Node CON-05 received 2.84 kWh, storage is now 2.70 kWh.
+2025-07-10 09:35:26,053 - models.grid_nodes - INFO - GridOperator cleared 3 trades.
+2025-07-10 09:35:26,053 - models.grid_nodes - INFO - GridOperator cleared 3 trades.
