@@ -1,112 +1,72 @@
 # Smart Grid Blockchain Simulation
 
-A dynamic command-line application for simulating blockchain-based smart grid energy trading environments. This simulation models interactions between prosumers (who both produce and consume energy), consumers, and grid operators within a microgrid environment.
+A decentralized energy trading platform that simulates a smart grid system using blockchain technology to securely record and verify energy transactions between different types of nodes.
+
+## Overview
+
+This simulation creates a virtual power grid with prosumers, consumers, and a grid operator that interact to trade energy in a decentralized marketplace. Energy transactions are recorded on a blockchain, providing a transparent and immutable ledger.
 
 ## Features
 
-- **Configurable Node Architecture**: Specify the number of prosumers, consumers, and grid operators
-- **Adjustable Mining Parameters**: Set Proof of Work difficulty and toggle GPU acceleration
-- **Simulation Control**: Define simulation duration and runtime parameters
-- **Database Integration**: Save simulation results to MySQL database
-- **Real-time Statistics**: Monitor energy trading and blockchain metrics during simulation
-- **Energy Market Simulation**: Includes price dynamics, energy trading, and grid balancing
+- **Decentralized Energy Trading**: Peer-to-peer energy transactions between grid participants
+- **Blockchain Implementation**: Secure transaction verification with customizable mining difficulty
+- **Dynamic Node Behavior**: Prosumers and consumers with realistic energy production/consumption patterns
+- **Grid Management**: Central grid operator that facilitates trades and maintains grid stability
+- **Real-time Simulation**: Time-accelerated simulation with configurable duration
+- **Comprehensive Logging**: Detailed transaction and system state logging
 
-## Installation
+## System Components
 
-1. Clone this repository:
-   ```
-   git clone <repository-url>
-   cd BlockchainNode
-   ```
+- **Prosumers**: Entities that both produce and consume energy (e.g., houses with solar panels)
+- **Consumers**: Entities that only consume energy from the grid
+- **Grid Operator**: Central entity that manages the grid and facilitates energy trading
+- **Blockchain**: Distributed ledger that records all energy transactions
 
-2. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+## Running the Simulation
 
-   For GPU acceleration (optional):
-   ```
-   pip install cupy-cuda12x
-   ```
-
-## Usage
-
-Run the simulation using command-line arguments:
+Use the included shell script to run the simulation with default parameters:
 
 ```bash
-python main.py [OPTIONS]
+./run.sh
 ```
 
-### Command Line Options
+Or run manually with custom parameters:
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--prosumers N` | Number of prosumer nodes | 3 |
-| `--consumers N` | Number of consumer nodes | 5 |
-| `--operators N` | Number of grid operator nodes (fixed at 1) | 1 |
-| `--difficulty N` | Blockchain mining difficulty (number of leading zeros) | 4 |
-| `--duration N` | Simulation duration in seconds (0 for infinite) | 300 |
-| `--use-gpu` | Use GPU for mining if available | False |
-| `--db-host HOST` | MySQL database host | '' (disabled) |
-| `--db-port PORT` | MySQL database port | 3306 |
-| `--db-user USER` | MySQL database user | 'root' |
-| `--db-password PASS` | MySQL database password | '' |
-| `--db-name NAME` | MySQL database name | 'smartgrid' |
+```bash
+python main.py --prosumers 5 --consumers 10 --difficulty 4 --duration 360
+```
 
-### Examples
+### Parameters
 
-1. Basic simulation with default parameters (3 prosumers, 5 consumers, 5-minute duration):
-   ```bash
-   python main.py
-   ```
+- `--prosumers`: Number of prosumer nodes (default: 5)
+- `--consumers`: Number of consumer nodes (default: 10)
+- `--difficulty`: Blockchain mining difficulty (default: 4)
+- `--duration`: Simulation duration in seconds (default: 120)
 
-2. Extended simulation with more nodes and longer duration:
-   ```bash
-   python main.py --prosumers 10 --consumers 20 --duration 600
-   ```
+## Logging
 
-3. High-difficulty simulation with GPU acceleration:
-   ```bash
-   python main.py --difficulty 6 --use-gpu
-   ```
+All simulation activities are logged to both the console and `smartgrid_simulation.log` file. The log includes:
 
-4. Simulation with database storage:
-   ```bash
-   python main.py --db-host localhost --db-user myuser --db-password mypassword
-   ```
+- Blockchain operations (block mining, transaction validation)
+- Energy trades between nodes
+- Node status updates
+- System-wide statistics
 
-## Architecture
+## Development
 
-The simulation consists of the following components:
+### Requirements
 
-1. **Blockchain Core** (`models/blockchain.py`): Implementation of the blockchain with Proof of Work consensus and optional GPU acceleration.
+- Python 3.8+
+- Required packages listed in `requirements.txt`
 
-2. **Smart Grid Nodes** (`models/grid_nodes.py`):
-   - `Prosumer`: Entities that both produce and consume energy
-   - `Consumer`: Entities that only consume energy
-   - `GridOperator`: Entities that manage the grid and facilitate energy trading
+### Project Structure
 
-3. **Database Utilities** (`utils/db_utils.py`): Tools for storing simulation data in a MySQL database.
-
-4. **Main Simulation** (`main.py`): Orchestrates the simulation and provides the command-line interface.
-
-## Simulation Workflow
-
-1. The simulation initializes a blockchain and creates the specified number of nodes.
-2. Prosumer nodes generate energy and may have surplus or deficit.
-3. Consumer nodes always need to purchase energy.
-4. The grid operator matches energy offers with requests and facilitates trades.
-5. Energy transactions are recorded on the blockchain.
-6. Statistics are collected and optionally stored in a database.
-
-## Database Schema
-
-When using database integration, the following tables are created:
-
-1. `blocks`: Stores blockchain blocks
-2. `transactions`: Stores individual energy and financial transactions
-3. `nodes`: Stores information about simulation nodes
-4. `simulation_stats`: Stores aggregate statistics about the simulation
+- `main.py`: Entry point and simulation orchestration
+- `models/`: Core system models
+  - `blockchain.py`: Blockchain implementation
+  - `grid_nodes.py`: Node implementations (Prosumer, Consumer, GridOperator)
+- `utils/`: Utility functions
+- `run.sh`: Convenience script for running the simulation
 
 ## License
 
