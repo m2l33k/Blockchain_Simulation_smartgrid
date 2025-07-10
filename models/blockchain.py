@@ -6,6 +6,9 @@ import uuid
 import logging
 from typing import List, Dict, Any, Optional
 
+# Import the DatabaseManager
+from utils.db_utils import DatabaseManager
+
 logger = logging.getLogger('blockchain')
 
 class Block:
@@ -28,20 +31,48 @@ class Block:
             "nonce": self.nonce, "miner_id": self.miner_id
         }, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert block to dictionary for database storage"""
+        return {
+            'index': self.index,
+            'hash': self.hash,
+            'previous_hash': self.previous_hash,
+            'timestamp': self.timestamp,
+            'nonce': self.nonce,
+            'miner_id': self.miner_id,
+            'transactions': self.transactions
+        }
 
 class Blockchain:
     """A blockchain implementation for a decentralized smart grid system"""
-    def __init__(self, difficulty: int = 4):
+    def __init__(self, difficulty: int = 4, db_config: Dict[str, Any] = None):
         self.chain: List[Block] = []
         self.current_transactions: List[Dict[str, Any]] = []
         self.nodes: set[BaseNode] = set()
         self.difficulty = difficulty
+        
+        # Initialize database connection if config is provided
+        self.db_manager = None
+        if db_config is not None:
+            try:
+                self.db_manager = DatabaseManager(**db_config)
+                logger.info("Database connection established")
+            except Exception as e:
+                logger.error(f"Failed to connect to database: {e}")
+                self.db_manager = None
+        
         self.create_genesis_block()
     
     def create_genesis_block(self):
         genesis_block = Block(index=0, timestamp=time.time(), transactions=[], previous_hash="0", miner_id="genesis")
         self.proof_of_work(genesis_block)
         self.chain.append(genesis_block)
+        
+        # Save genesis block to database if DB connection exists
+        if self.db_manager:
+            self.db_manager.save_block(genesis_block.to_dict())
+            
         logger.info(f"Genesis block created: {genesis_block.hash[:12]}")
     
     def proof_of_work(self, block: Block):
@@ -55,6 +86,11 @@ class Blockchain:
         if block.hash[:self.difficulty] != "0" * self.difficulty: return False
         
         self.chain.append(block)
+        
+        # Save block to database if DB connection exists
+        if self.db_manager:
+            self.db_manager.save_block(block.to_dict())
+            
         logger.info(f"Block #{block.index} added. Miner: {block.miner_id}, Txs: {len(block.transactions)}")
         
         # Process transactions within the block
@@ -85,9 +121,15 @@ class Blockchain:
     def new_transaction(self, sender: str, recipient: str, amount: float, 
                        energy: float = 0, transaction_type: str = "financial") -> str:
         tx_id = uuid.uuid4().hex
+        timestamp = time.time()
         transaction = {
-            'sender': sender, 'recipient': recipient, 'amount': amount,
-            'energy': energy, 'type': transaction_type, 'tx_id': tx_id
+            'sender': sender, 
+            'recipient': recipient, 
+            'amount': amount,
+            'energy': energy, 
+            'type': transaction_type, 
+            'tx_id': tx_id,
+            'timestamp': timestamp
         }
         self.current_transactions.append(transaction)
         
@@ -103,6 +145,16 @@ class Blockchain:
                 block.index == len(self.chain) and
                 block.hash[:self.difficulty] == "0" * self.difficulty and
                 block.hash == block.calculate_hash())
+    
+    def save_simulation_stats(self, stats: Dict[str, Any]):
+        """Save simulation statistics to the database"""
+        if self.db_manager:
+            self.db_manager.save_stats(stats)
+    
+    def close(self):
+        """Close database connection when blockchain is no longer needed"""
+        if self.db_manager:
+            self.db_manager.close()
 
 # This line ensures the module can be run standalone for testing without error
 if __name__ == '__main__':

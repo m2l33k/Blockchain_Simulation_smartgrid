@@ -45,6 +45,16 @@ class SmartGridSimulation:
         self.prosumers = []
         self.consumers = []
         
+        # Database configuration
+        self.db_config = {
+            'host': 'localhost',
+            'user': 'root',
+            'password': self.args.db_password,  # Get from command line args
+            'database': 'smartgrid',
+            'port': 3306,
+            'create_if_not_exists': True
+        }
+        
         self._init_blockchain()
         self._init_nodes()
         self._connect_nodes()
@@ -55,7 +65,7 @@ class SmartGridSimulation:
 
     def _init_blockchain(self):
         logging.info(f"Initializing blockchain (difficulty={self.args.difficulty})")
-        self.blockchain = Blockchain(difficulty=self.args.difficulty)
+        self.blockchain = Blockchain(difficulty=self.args.difficulty, db_config=self.db_config)
 
     def _init_nodes(self):
         logging.info("Creating grid operator node")
@@ -140,6 +150,12 @@ class SmartGridSimulation:
             if node: node.stop()
         
         self._log_statistics()
+        
+        # Close database connection
+        if self.blockchain and hasattr(self.blockchain, 'close'):
+            self.blockchain.close()
+            logging.info("Database connection closed")
+            
         logging.info(f"Simulation completed in {time.time() - self.start_time:.2f} seconds")
     
     def _signal_handler(self, sig, frame):
@@ -154,6 +170,7 @@ def main():
     parser.add_argument('--consumers', type=int, default=10, help='Number of consumer nodes')
     parser.add_argument('--difficulty', type=int, default=4, help='Blockchain mining difficulty')
     parser.add_argument('--duration', type=int, default=120, help='Simulation duration in seconds')
+    parser.add_argument('--db_password', type=str, default='', help='MySQL database password')
     args = parser.parse_args()
     
     simulation = SmartGridSimulation(args)

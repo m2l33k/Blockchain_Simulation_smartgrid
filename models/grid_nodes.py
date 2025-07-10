@@ -44,9 +44,6 @@ class SmartMeter:
         if self.owner_node: self.owner_node.process_meter_reading({'net_energy': net_energy, 'hour': hour_of_day})
         return {'net_energy': net_energy, 'hour': hour_of_day}
 
-# ... The rest of the file ...
-# (I am pasting the full, corrected version below for clarity)
-
 # --- Forward declaration for type hints ---
 class BaseNode: pass
 class Blockchain: pass
@@ -63,18 +60,51 @@ class BaseNode:
         self.mining_thread: Optional[threading.Thread] = None
         self.mining_active = False
         self.active = True
+        
+        # Track whether we need to save to database
+        self._last_db_update = time.time()
+        self._db_update_interval = 10  # seconds
 
     def register_with_blockchain(self, blockchain: Blockchain):
         self.blockchain = blockchain
         blockchain.nodes.add(self)
         logger.info(f"Node {self.node_id} registered.")
+        
+        # Initial save to database
+        self._save_to_db()
 
     def create_transaction(self, recipient: str, amount: float, energy: float, tx_type: str) -> str:
         if not self.blockchain: return ""
         if tx_type.endswith("payment") and amount > self.wallet_balance: return ""
         tx_id = self.blockchain.new_transaction(self.node_id, recipient, amount, energy, tx_type)
         if tx_type.endswith("payment"): self.wallet_balance -= amount
+        
+        # Save state to database when wallet balance changes
+        self._save_to_db()
+        
         return tx_id
+    
+    def _save_to_db(self):
+        """Save node data to database"""
+        current_time = time.time()
+        if current_time - self._last_db_update < self._db_update_interval:
+            return  # Don't update too frequently
+            
+        self._last_db_update = current_time
+        
+        if hasattr(self, 'energy_storage'):
+            energy_balance = getattr(self, 'energy_storage', 0.0)
+        else:
+            energy_balance = 0.0
+            
+        if self.blockchain and hasattr(self.blockchain, 'db_manager') and self.blockchain.db_manager:
+            node_type = self.__class__.__name__.lower()
+            self.blockchain.db_manager.save_node(
+                self.node_id, 
+                node_type, 
+                self.wallet_balance, 
+                energy_balance
+            )
 
     def start_mining(self):
         if self.can_mine and not self.mining_active:
@@ -97,11 +127,15 @@ class BaseNode:
 
     def process_transaction(self, transaction: Dict[str, Any]):
         if transaction['recipient'] == self.node_id:
-            if transaction['type'] == 'energy_payment': self.wallet_balance += transaction['amount']
+            if transaction['type'] == 'energy_payment': 
+                self.wallet_balance += transaction['amount']
+                # Save state after receiving payment
+                self._save_to_db()
             elif transaction['type'] == 'energy_delivery' and hasattr(self, 'energy_storage'):
                 self.energy_storage = min(self.max_storage, self.energy_storage + transaction['energy'] * self.storage_efficiency)
                 logger.info(f"Node {self.node_id} received {transaction['energy']:.2f} kWh, storage is now {self.energy_storage:.2f} kWh.")
                 self.create_transaction(transaction['sender'], transaction['amount'], 0, 'energy_payment')
+                # State will be saved by create_transaction
 
 # --- GridOperator Class ---
 class GridOperator(BaseNode):
@@ -145,6 +179,9 @@ class GridOperator(BaseNode):
             requests.sort(key=lambda r: r['price'], reverse=True)
 
             trades_executed = 0
+            total_energy_traded = 0
+            total_value = 0
+            
             for req in list(requests):
                 for offer in list(offers):
                     if offer['price'] <= req['price']:
@@ -154,11 +191,30 @@ class GridOperator(BaseNode):
                         
                         self.create_transaction(req['sender_id'], trade_amount, trade_energy, 'energy_delivery')
                         trades_executed += 1
+                        total_energy_traded += trade_energy
+                        total_value += trade_amount
                         
                         offer['energy'] -= trade_energy
                         req['energy'] -= trade_energy
             
-            if trades_executed > 0: logger.info(f"GridOperator cleared {trades_executed} trades.")
+            if trades_executed > 0: 
+                logger.info(f"GridOperator cleared {trades_executed} trades.")
+                
+                # Save market statistics to database
+                if self.blockchain and hasattr(self.blockchain, 'db_manager') and self.blockchain.db_manager:
+                    avg_price = total_value / total_energy_traded if total_energy_traded > 0 else 0
+                    block_count = len(self.blockchain.chain) if self.blockchain else 0
+                    
+                    stats = {
+                        'timestamp': time.time(),
+                        'total_energy_traded': total_energy_traded,
+                        'avg_energy_price': avg_price,
+                        'block_count': block_count,
+                        'transaction_count': trades_executed
+                    }
+                    
+                    self.blockchain.save_simulation_stats(stats)
+                
             self.order_book['offers'] = [o for o in offers if o['energy'] > 0.01]
             self.order_book['requests'] = [r for r in requests if r['energy'] > 0.01]
 
@@ -215,6 +271,9 @@ class GridNode(BaseNode):
             self.energy_storage -= from_storage
             remaining_deficit = abs(net_energy) - (from_storage * self.storage_efficiency)
             if remaining_deficit > 0.1: self._request_needed_energy(remaining_deficit)
+            
+        # Save node data to database periodically
+        self._save_to_db()
 
     def _offer_excess_energy(self, amount: float):
         if self.grid_operator:
