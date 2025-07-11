@@ -1,18 +1,15 @@
-from __future__ import annotations # MUST BE THE VERY FIRST LINE
+from __future__ import annotations
 import hashlib
 import json
 import time
 import uuid
 import logging
+import threading
 from typing import List, Dict, Any, Optional
 
-# Import the DatabaseManager
-from utils.db_utils import DatabaseManager
-
-logger = logging.getLogger('blockchain')
+logger = logging.getLogger(__name__)
 
 class Block:
-    """A block in the blockchain"""
     def __init__(self, index: int, timestamp: float, transactions: List[Dict[str, Any]],
                  previous_hash: str, miner_id: str = "", nonce: int = 0):
         self.index = index
@@ -24,7 +21,6 @@ class Block:
         self.hash = self.calculate_hash()
         
     def calculate_hash(self) -> str:
-        """Calculate the hash of this block"""
         block_string = json.dumps({
             "index": self.index, "timestamp": self.timestamp,
             "transactions": self.transactions, "previous_hash": self.previous_hash,
@@ -33,47 +29,28 @@ class Block:
         return hashlib.sha256(block_string).hexdigest()
     
     def to_dict(self) -> Dict[str, Any]:
-        """Convert block to dictionary for database storage"""
+        """Converts the block to a dictionary, perfect for JSON logging."""
         return {
-            'index': self.index,
-            'hash': self.hash,
-            'previous_hash': self.previous_hash,
-            'timestamp': self.timestamp,
-            'nonce': self.nonce,
-            'miner_id': self.miner_id,
-            'transactions': self.transactions
+            "index": self.index, "timestamp": self.timestamp,
+            "transactions": self.transactions, "previous_hash": self.previous_hash,
+            "hash": self.hash, "nonce": self.nonce, "miner_id": self.miner_id
         }
 
 class Blockchain:
-    """A blockchain implementation for a decentralized smart grid system"""
-    def __init__(self, difficulty: int = 4, db_config: Dict[str, Any] = None):
+    def __init__(self, difficulty: int = 4, db_config=None): # Added db_config for your future use
         self.chain: List[Block] = []
         self.current_transactions: List[Dict[str, Any]] = []
         self.nodes: set[BaseNode] = set()
         self.difficulty = difficulty
-        
-        # Initialize database connection if config is provided
-        self.db_manager = None
-        if db_config is not None:
-            try:
-                self.db_manager = DatabaseManager(**db_config)
-                logger.info("Database connection established")
-            except Exception as e:
-                logger.error(f"Failed to connect to database: {e}")
-                self.db_manager = None
-        
+        self.lock = threading.Lock()
         self.create_genesis_block()
     
     def create_genesis_block(self):
-        genesis_block = Block(index=0, timestamp=time.time(), transactions=[], previous_hash="0", miner_id="genesis")
+        genesis_block = Block(0, time.time(), [], "0", "genesis")
         self.proof_of_work(genesis_block)
+        # FIX: Log genesis block in the same structured format
+        logger.info(f"MINED_BLOCK: {json.dumps(genesis_block.to_dict())}")
         self.chain.append(genesis_block)
-        
-        # Save genesis block to database if DB connection exists
-        if self.db_manager:
-            self.db_manager.save_block(genesis_block.to_dict())
-            
-        logger.info(f"Genesis block created: {genesis_block.hash[:12]}")
     
     def proof_of_work(self, block: Block):
         target = "0" * self.difficulty
@@ -82,80 +59,54 @@ class Blockchain:
             block.hash = block.calculate_hash()
     
     def add_block(self, block: Block) -> bool:
-        if block.previous_hash != self.chain[-1].hash or block.index != len(self.chain): return False
-        if block.hash[:self.difficulty] != "0" * self.difficulty: return False
-        
-        self.chain.append(block)
-        
-        # Save block to database if DB connection exists
-        if self.db_manager:
-            self.db_manager.save_block(block.to_dict())
-            
-        logger.info(f"Block #{block.index} added. Miner: {block.miner_id}, Txs: {len(block.transactions)}")
-        
-        # Process transactions within the block
-        for tx in block.transactions:
-            for node in self.nodes:
+        with self.lock:
+            if not self.validate_block(block): return False
+            self.chain.append(block)
+            # FIX: Log the entire block as a structured JSON object
+            # This is the key change for reliable parsing.
+            logger.info(f"MINED_BLOCK: {json.dumps(block.to_dict())}")
+
+        for node in list(self.nodes):
+            for tx in block.transactions:
                 if hasattr(node, 'process_transaction'):
                     node.process_transaction(tx)
-
-        # Notify nodes of the new block
-        for node in list(self.nodes):
-            if hasattr(node, 'receive_block') and node.node_id != block.miner_id:
-                node.receive_block(block)
         return True
     
     def create_new_block(self, miner_id: str) -> Optional[Block]:
-        if not self.current_transactions: return None
+        with self.lock:
+            if not self.current_transactions: return None
+            transactions_to_mine = list(self.current_transactions)
+            self.current_transactions = []
         
-        previous_block = self.chain[-1]
-        new_block = Block(len(self.chain), time.time(), list(self.current_transactions), previous_block.hash, miner_id)
-        
+        new_block = Block(len(self.chain), time.time(), transactions_to_mine, self.chain[-1].hash, miner_id)
         self.proof_of_work(new_block)
         
         if self.add_block(new_block):
-            self.current_transactions = []
             return new_block
-        return None
+        else: 
+            with self.lock:
+                self.current_transactions.extend(transactions_to_mine)
+            return None
     
     def new_transaction(self, sender: str, recipient: str, amount: float, 
                        energy: float = 0, transaction_type: str = "financial") -> str:
-        tx_id = uuid.uuid4().hex
-        timestamp = time.time()
-        transaction = {
-            'sender': sender, 
-            'recipient': recipient, 
-            'amount': amount,
-            'energy': energy, 
-            'type': transaction_type, 
-            'tx_id': tx_id,
-            'timestamp': timestamp
-        }
-        self.current_transactions.append(transaction)
-        
-        for node in list(self.nodes):
-            if hasattr(node, 'on_new_transaction'): node.on_new_transaction(transaction)
+        with self.lock:
+            tx_id = uuid.uuid4().hex
+            transaction = {
+                'sender': sender, 'recipient': recipient, 'amount': amount,
+                'energy': energy, 'type': transaction_type, 'tx_id': tx_id
+            }
+            self.current_transactions.append(transaction)
         return tx_id
     
     def get_pending_transactions(self) -> List[Dict[str, Any]]:
-        return self.current_transactions
+        with self.lock:
+            return list(self.current_transactions)
 
     def validate_block(self, block: Block) -> bool:
-        return (block.previous_hash == self.chain[-1].hash and
-                block.index == len(self.chain) and
-                block.hash[:self.difficulty] == "0" * self.difficulty and
-                block.hash == block.calculate_hash())
-    
-    def save_simulation_stats(self, stats: Dict[str, Any]):
-        """Save simulation statistics to the database"""
-        if self.db_manager:
-            self.db_manager.save_stats(stats)
-    
-    def close(self):
-        """Close database connection when blockchain is no longer needed"""
-        if self.db_manager:
-            self.db_manager.close()
-
-# This line ensures the module can be run standalone for testing without error
-if __name__ == '__main__':
-    print(f"models.blockchain.py is syntactically correct and can be imported.")
+        last_block = self.chain[-1]
+        if block.index != last_block.index + 1: return False
+        if block.previous_hash != last_block.hash: return False
+        if block.hash[:self.difficulty] != "0" * self.difficulty: return False
+        if block.hash != block.calculate_hash(): return False
+        return True

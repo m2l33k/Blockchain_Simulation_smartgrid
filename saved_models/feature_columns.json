@@ -1,0 +1,1 @@
+["miner_id", "num_tx", "time_since_last_block", "avg_energy", "std_dev_energy", "total_energy", "avg_amount", "std_dev_amount", "total_amount", "num_offers", "num_requests", "num_deliveries", "num_payments", "num_theft_attempts", "num_alerts", "unique_senders", "unique_recipients"]

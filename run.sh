@@ -1,49 +1,42 @@
 #!/bin/bash
 
-# Activate virtual environment if exists
+# This script runs the FULL pipeline:
+# 1. Generates data with anomalies.
+# 2. Pre-processes the data into a labeled CSV.
+# 3. Trains the LSTM model on the new data.
+
+# Activate the virtual environment
 if [ -f "venv/bin/activate" ]; then
     source venv/bin/activate
 fi
 
-LOG_FILE="smartgrid_simulation.log"
-RESULT_FILE="results.log"
+echo "=============================================="
+echo "⚡ SMART GRID - FULL TRAINING PIPELINE ⚡"
+echo "=============================================="
 
-# Define colors
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[1;34m'
-CYAN='\033[1;36m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
+# --- Step 1: Generate Data ---
+echo "STEP 1: Starting 10-minute simulation to generate training data..."
+# Pass the 'generate' mode argument to main.py
+python main.py generate \
+    --prosumers 10 \
+    --consumers 20 \
+    --difficulty 3 \
+    --duration 600 
 
-# Visual Start
-echo -e "${BLUE}=============================================="
-echo -e "⚡ ${CYAN}SMART GRID SIMULATION - RUNNING SCRIPT${BLUE} ⚡"
-echo -e "==============================================${NC}"
+echo "----------------------------------------------"
 
-echo -e "${YELLOW}🧹 Clearing previous smartgrid_simulation.log file...${NC}"
-rm -f "$LOG_FILE"
+# --- Step 2: Process Data ---
+echo "STEP 2: Processing log file into featurized CSV..."
+python data_preprocessor.py
 
-echo -e "${GREEN}🚀 Starting simulation with parameters:${NC}"
-echo -e "${CYAN}   ➤ Prosumers : 5"
-echo -e "   ➤ Consumers : 10"
-echo -e "   ➤ Difficulty: 4"
-echo -e "   ➤ Duration  : 120s${NC}"
+echo "----------------------------------------------"
 
-echo -e "${BLUE}----------------------------------------------${NC}"
+# --- Step 3: Train Model ---
+echo "STEP 3: Training the LSTM model on the new data..."
+python train_model.py
 
-# Run simulation and save to both logs
-python main.py \
-    --prosumers 5 \
-    --consumers 10 \
-    --difficulty 4 \
-    --duration 120 | tee -a "$LOG_FILE" "$RESULT_FILE"
-
-echo -e "${BLUE}----------------------------------------------${NC}"
-echo -e "${GREEN}✅ Simulation completed successfully!${NC}"
-echo -e "${YELLOW}📄 Check the log files:${NC}"
-echo -e "${CYAN}   - $LOG_FILE (reset each run)"
-echo -e "   - $RESULT_FILE (cumulative)${NC}"
-echo -e "${BLUE}==============================================${NC}"
-
-# deactivate
+echo "=============================================="
+echo "✅ Pipeline finished."
+echo "   A new model has been saved to 'saved_models/'"
+echo "   You can now run './run_live.sh' to test it."
+echo "=============================================="

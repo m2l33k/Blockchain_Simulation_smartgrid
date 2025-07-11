@@ -25,7 +25,7 @@ class AnomalyInjector:
             self.inject_dos_attack,
         ]
 
-    def start(self, interval_seconds: int = 20):
+    def start(self, interval_seconds: int = 10):
         if not self.all_nodes:
             logger.warning("AnomalyInjector: No nodes to inject anomalies into. Stopping.")
             return
