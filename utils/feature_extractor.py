@@ -1,46 +1,54 @@
 # utils/feature_extractor.py
-
 import numpy as np
-import pandas as pd # Import pandas for categorical conversion
-from typing import Dict
+from typing import Dict, Any
 
-def extract_features_from_block(block_data: dict, prev_block_timestamp: float) -> dict:
-    """Calculates rich, aggregated features from the transactions AND metadata of a single block."""
-    
+def extract_features_from_block(block_data: Dict[str, Any], prev_block_timestamp: float) -> Dict[str, Any]:
+    """
+    Extracts a flat dictionary of numerical features from a block's data.
+    """
     transactions = block_data.get('transactions', [])
-    num_transactions = len(transactions)
+    num_tx = len(transactions)
     
-    features = {
-        # FIX: Add block-level metadata directly here
-        'block_index': block_data.get('index', 0),
-        'miner_id': block_data.get('miner_id', 'unknown'),
-        'num_tx': num_transactions,
-        'time_since_last_block': block_data.get('timestamp', 0) - prev_block_timestamp,
+    time_since_last_block = block_data.get('timestamp', 0) - prev_block_timestamp
+    
+    if num_tx > 0:
+        tx_amounts = [tx.get('amount', 0) for tx in transactions]
+        tx_energies = [tx.get('energy', 0) for tx in transactions]
         
-        # Transaction-based features (default to 0)
-        'avg_energy': 0, 'std_dev_energy': 0, 'total_energy': 0,
-        'avg_amount': 0, 'std_dev_amount': 0, 'total_amount': 0,
-        'num_offers': 0, 'num_requests': 0, 'num_deliveries': 0,
-        'num_payments': 0, 'num_theft_attempts': 0, 'num_alerts': 0,
-        'unique_senders': 0, 'unique_recipients': 0
+        tx_types = [tx.get('type', 'unknown') for tx in transactions]
+        type_counts = {
+            'energy_payment_count': tx_types.count('energy_payment'),
+            'energy_delivery_count': tx_types.count('energy_delivery'),
+            'spam_ramp_up_count': tx_types.count('spam_ramp_up'),
+            'spam_peak_count': tx_types.count('spam_peak'),
+            'wash_trade_count': tx_types.count('wash_trade_payment'),
+            'fraudulent_count': tx_types.count('fraudulent_payment'),
+        }
+
+        total_amount = sum(tx_amounts)
+        avg_amount = np.mean(tx_amounts) if tx_amounts else 0
+        std_amount = np.std(tx_amounts) if tx_amounts else 0
+        total_energy = sum(tx_energies)
+        
+        unique_senders = len(set(tx.get('sender') for tx in transactions))
+        unique_recipients = len(set(tx.get('recipient') for tx in transactions))
+    else:
+        type_counts = {k: 0 for k in ['energy_payment_count', 'energy_delivery_count', 'spam_ramp_up_count', 'spam_peak_count', 'wash_trade_count', 'fraudulent_count']}
+        total_amount, avg_amount, std_amount, total_energy = 0, 0, 0, 0
+        unique_senders, unique_recipients = 0, 0
+
+    features = {
+        'num_transactions': num_tx,
+        'nonce': block_data.get('nonce', 0),
+        'time_since_last_block': time_since_last_block,
+        'miner_id': block_data.get('miner_id', 'unknown'),
+        'total_amount_transacted': total_amount,
+        'avg_amount_transacted': avg_amount,
+        'std_dev_amount': std_amount,
+        'total_energy_transacted': total_energy,
+        'unique_senders': unique_senders,
+        'unique_recipients': unique_recipients,
+        **type_counts
     }
-
-    if num_transactions > 0:
-        energy_values = [tx.get('energy', 0) for tx in transactions]
-        amount_values = [tx.get('amount', 0) for tx in transactions]
-        tx_types = [tx.get('type', '') for tx in transactions]
-        senders = [tx.get('sender', '') for tx in transactions]
-        recipients = [tx.get('recipient', '') for tx in transactions]
-
-        features.update({
-            'avg_energy': np.mean(energy_values), 'std_dev_energy': np.std(energy_values),
-            'total_energy': np.sum(energy_values), 'avg_amount': np.mean(amount_values),
-            'std_dev_amount': np.std(amount_values), 'total_amount': np.sum(amount_values),
-            'num_offers': tx_types.count('energy_offer'), 'num_requests': tx_types.count('energy_request'),
-            'num_deliveries': tx_types.count('energy_delivery'),
-            'num_payments': sum(1 for t in tx_types if t.endswith('payment')), # Catches all payment types
-            'num_theft_attempts': tx_types.count('fraudulent_payment_attempt'),
-            'num_alerts': sum(1 for t in tx_types if t.startswith('alert_')),
-            'unique_senders': len(set(senders)), 'unique_recipients': len(set(recipients)),
-        })
+    
     return features

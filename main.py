@@ -1,5 +1,6 @@
-# main.py (Final Corrected Version)
+# main.py (Corrected with Proper Node List Management)
 
+from __future__ import annotations
 import argparse
 import time
 import signal
@@ -7,26 +8,33 @@ import sys
 import logging
 import random
 import os
-# The scaler and joblib are no longer needed in main.py, they are handled by other scripts.
-# import joblib 
-# from sklearn.preprocessing import MinMaxScaler
+import json
 
-# --- Centralized Logging Configuration ---
-# (This section is correct and does not need changes)
+# --- Configure Logging ---
+try:
+    log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data_generation_run.log")
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)-18s - %(levelname)-8s - %(message)s',
+        handlers=[
+            logging.FileHandler(log_file, mode='w'),
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+    logging.info("--- Logging configured successfully ---")
+except Exception as e:
+    print(f"!!! CRITICAL: FAILED TO CONFIGURE LOGGING: {e} !!!")
+    sys.exit(1)
 
 # --- Import Custom Modules ---
 try:
     from models.blockchain import Blockchain
-    from models.grid_nodes import Prosumer, Consumer, GridOperator
+    from models.grid_nodes import Prosumer, Consumer, GridOperator, BaseNode
+    # Make sure to use the corrected anomaly_injector from the previous step
     from anomaly_injector import AnomalyInjector
-    from fraud_detector import FraudDetector
+    logging.info("--- Custom modules imported successfully ---")
 except ImportError as e:
-    if 'anomaly_injector' in str(e): AnomalyInjector = None
-    if 'fraud_detector' in str(e): FraudDetector = None
-    print(f"--- Warning: Could not import a module ({e}). Some modes may be unavailable. ---")
-except Exception as e:
-    logging.basicConfig()
-    logging.critical(f"An unexpected error occurred during imports: {e}", exc_info=True)
+    logging.critical(f"A required module is missing. Please check your file structure. Error: {e}", exc_info=True)
     sys.exit(1)
 
 
@@ -35,163 +43,146 @@ class SmartGridSimulation:
         self.args = args
         self.running = False
         self.start_time = time.time()
-        self.blockchain = None
-        self.grid_operator = None
-        self.prosumers = []
-        self.consumers = []
         
-        self.anomaly_injector = None
-        self.fraud_detector = None
+        # --- FIX: Initialize lists here ---
+        self.all_nodes: list[BaseNode] = []
         
-        self._setup_logging()
         self._init_blockchain()
         self._init_nodes()
-        self._connect_nodes()
-        
-        if args.mode == 'generate' and AnomalyInjector:
-            self._init_anomaly_injector()
-        elif args.mode == 'detect' and FraudDetector:
-            if AnomalyInjector: self._init_anomaly_injector()
-            self._init_fraud_detector()
+        self._init_anomaly_injector()
         
         signal.signal(signal.SIGINT, self._signal_handler)
+        signal.signal(signal.SIGTERM, self._signal_handler)
         logging.info("--- Simulation class initialized ---")
-
-    def _setup_logging(self):
-        log_filename = "live_detection_run.log" if self.args.mode == 'detect' else "data_generation_run.log"
-        log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), log_filename)
-        
-        root_logger = logging.getLogger()
-        root_logger.setLevel(logging.INFO)
-        if root_logger.hasHandlers(): root_logger.handlers.clear()
-        
-        file_handler = logging.FileHandler(log_file_path, mode='w')
-        file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-        root_logger.addHandler(file_handler)
-        
-        console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-        root_logger.addHandler(console_handler)
-        
-        logging.info(f"Logging configured. Output will go to terminal and {log_filename}")
 
     def _init_blockchain(self):
         logging.info(f"Initializing blockchain (difficulty={self.args.difficulty})")
         self.blockchain = Blockchain(difficulty=self.args.difficulty)
 
     def _init_nodes(self):
-        logging.info("Creating grid operator node")
-        self.grid_operator = GridOperator(node_id="GRID-OP-01", wallet_balance=1_000_000.0)
-        self.grid_operator.register_with_blockchain(self.blockchain)
+        """
+        --- FIX: Initializes all nodes and populates a single `self.all_nodes` list ---
+        """
+        sim_start_time = time.time()
         
-        logging.info(f"Creating {self.args.prosumers} prosumer nodes")
+        logging.info("Creating grid operator node...")
+        self.grid_operator = GridOperator(node_id="GRID-OP-01", blockchain=self.blockchain)
+        self.all_nodes.append(self.grid_operator)
+        
+        # Keep separate lists for easy access if needed, but also add to the main list
+        self.prosumers = []
+        logging.info(f"Creating {self.args.prosumers} prosumer nodes...")
         for i in range(self.args.prosumers):
-            prosumer = Prosumer(f"PRO-{i:02d}", 100.0, random.uniform(5,15), random.uniform(3,8), self.start_time)
-            prosumer.register_with_blockchain(self.blockchain)
+            prosumer = Prosumer(
+                node_id=f"PRO-{i:02d}",
+                blockchain=self.blockchain,
+                production_capacity=random.uniform(5.0, 15.0),
+                consumption_rate=random.uniform(3.0, 8.0),
+                sim_start_time=sim_start_time
+            )
+            prosumer.connect_to_grid_operator(self.grid_operator)
             self.prosumers.append(prosumer)
+            self.all_nodes.append(prosumer)
         
-        logging.info(f"Creating {self.args.consumers} consumer nodes")
+        self.consumers = []
+        logging.info(f"Creating {self.args.consumers} consumer nodes...")
         for i in range(self.args.consumers):
-            consumer = Consumer(f"CON-{i:02d}", 100.0, random.uniform(5,12), self.start_time)
-            consumer.register_with_blockchain(self.blockchain)
+            consumer = Consumer(
+                node_id=f"CON-{i:02d}",
+                blockchain=self.blockchain,
+                consumption_rate=random.uniform(5.0, 12.0),
+                sim_start_time=sim_start_time
+            )
+            consumer.connect_to_grid_operator(self.grid_operator)
             self.consumers.append(consumer)
+            self.all_nodes.append(consumer)
 
-    def _connect_nodes(self):
-        logging.info("Connecting all nodes to the main grid operator.")
-        for node in self.prosumers + self.consumers:
-            node.connect_to_node(self.grid_operator)
-    
+        logging.info(f"Total nodes initialized: {len(self.all_nodes)}")
+
     def _init_anomaly_injector(self):
-        logging.info("Initializing Anomaly Injector.")
-        self.anomaly_injector = AnomalyInjector(self.prosumers + self.consumers, self.grid_operator)
-
-    def _init_fraud_detector(self):
-        """Initializes the fraud detector for live detection runs."""
-        logging.info("Initializing Live Fraud Detector.")
-        # FIX: The FraudDetector now loads its own assets. We just need to create it
-        # and pass it the live blockchain instance.
-        self.fraud_detector = FraudDetector(blockchain=self.blockchain)
-        
-        # This check is now handled inside the FraudDetector's __init__
-        if not self.fraud_detector.is_ready:
-            self.fraud_detector = None 
+        logging.info("Initializing anomaly injector.")
+        # --- FIX: Now correctly uses the `self.all_nodes` attribute ---
+        self.anomaly_injector = AnomalyInjector(self.all_nodes, self.grid_operator, self.blockchain)
 
     def run(self):
-        logging.info(f"--- Starting Simulation Run (Mode: {self.args.mode}) ---")
+        logging.info("--- Starting Simulation Run ---")
         self.running = True
         
-        for node in [self.grid_operator] + self.prosumers + self.consumers:
-            node.start()
+        for node in self.all_nodes:
+            if hasattr(node, 'start'):
+                node.start()
         
-        if self.anomaly_injector: self.anomaly_injector.start()
-        if self.fraud_detector: self.fraud_detector.start()
+        if self.anomaly_injector:
+            self.anomaly_injector.start()
         
         try:
             self._monitor_simulation()
         except KeyboardInterrupt:
-            logging.info("Simulation interrupted by user")
+            logging.info("Simulation interrupted by user.")
         finally:
             self.stop()
     
     def _monitor_simulation(self):
         stats_interval = 15
+        last_stats_time = time.time()
+        
         while self.running:
             if self.args.duration > 0 and (time.time() - self.start_time) >= self.args.duration:
-                logging.info(f"Simulation duration ({self.args.duration}s) reached")
+                logging.info(f"Simulation duration ({self.args.duration}s) reached. Stopping.")
                 self.running = False
                 break
-            if int(time.time()) % stats_interval == 0:
+
+            if self.blockchain.get_pending_transactions():
+                logging.info(f"Main loop found {len(self.blockchain.get_pending_transactions())} pending transactions. Initiating mining...")
+                self.blockchain.create_new_block(miner_id="GRID-OP-01")
+            
+            if time.time() - last_stats_time >= stats_interval:
                 self._log_statistics()
-                time.sleep(1) 
-            else:
-                time.sleep(0.5)
+                last_stats_time = time.time()
+            
+            time.sleep(1)
     
     def _log_statistics(self):
-        block_count = len(self.blockchain.chain)
-        tx_count = sum(len(b.transactions) for b in self.blockchain.chain)
-        energy_traded = sum(tx['energy'] for b in self.blockchain.chain for tx in b.transactions if tx['type'] == 'energy_delivery')
-        total_storage = sum(node.energy_storage for node in self.prosumers + self.consumers if hasattr(node, 'energy_storage'))
+        if not self.blockchain: return
+        with self.blockchain.lock:
+            block_count = len(self.blockchain.chain)
+            tx_count = sum(len(b.transactions) for b in self.blockchain.chain)
+            energy_traded = sum(tx['energy'] for b in self.blockchain.chain for tx in b.transactions if tx['type'] == 'energy_delivery')
+            # FIX: Use the prosumer/consumer lists for specific stats
+            total_storage = sum(node.energy_storage for node in (self.prosumers + self.consumers) if hasattr(node, 'energy_storage'))
         logging.info(f"STATS | Blocks: {block_count}, Txs: {tx_count}, Energy Traded: {energy_traded:.2f} kWh, Total Storage: {total_storage:.2f} kWh")
-
+    
     def stop(self):
         if not self.running: return
         logging.info("--- Stopping Simulation ---")
         self.running = False
         
-        if self.anomaly_injector: self.anomaly_injector.stop()
-        if self.fraud_detector: self.fraud_detector.stop()
-        for node in [self.grid_operator] + self.prosumers + self.consumers:
-            if node: node.stop()
+        if self.anomaly_injector:
+            self.anomaly_injector.stop()
+            
+        for node in self.all_nodes:
+            if hasattr(node, 'stop'):
+                node.stop()
         
         self._log_statistics()
-        if hasattr(self.blockchain, 'close_db'): self.blockchain.close_db()
-        logging.info(f"Simulation completed in {time.time() - self.start_time:.2f} seconds")
+        
+        logging.info(f"Simulation completed in {time.time() - self.start_time:.2f} seconds.")
     
     def _signal_handler(self, sig, frame):
-        logging.warning(f"Received signal {sig}, shutting down...")
-        self.stop()
-        sys.exit(0)
+        logging.warning(f"Received signal {sig}, shutting down gracefully...")
+        self.running = False
 
 def main():
-    parser = argparse.ArgumentParser(description='Smart Grid Blockchain Simulation')
-    parser.add_argument('mode', choices=['generate', 'train', 'detect'], 
-                        help="Run mode: 'generate' for data, 'train' for the model, 'detect' for live detection.")
-    parser.add_argument('--prosumers', type=int, default=10)
-    parser.add_argument('--consumers', type=int, default=20)
-    parser.add_argument('--difficulty', type=int, default=3)
-    parser.add_argument('--duration', type=int, default=120)
-    parser.add_argument('--db-password', type=str, default=None)
+    parser = argparse.ArgumentParser(description='Smart Grid Blockchain Simulation Log Generator')
+    parser.add_argument('--prosumers', type=int, default=10, help='Number of prosumer nodes')
+    parser.add_argument('--consumers', type=int, default=20, help='Number of consumer nodes')
+    parser.add_argument('--difficulty', type=int, default=3, help='Blockchain mining difficulty')
+    parser.add_argument('--duration', type=int, default=120, help='Simulation duration in seconds (0 for infinite)')
     args = parser.parse_args()
     
-    if args.mode == 'train':
-        print("--- Running the training pipeline ---")
-        if not os.path.exists('data/featurized_labeled_data.csv'):
-            print("Labeled data not found. Run in 'generate' mode first: python main.py generate")
-            sys.exit(1)
-        os.system('python train_model.py')
-    else:
-        simulation = SmartGridSimulation(args)
-        simulation.run()
+    simulation = SmartGridSimulation(args)
+    simulation.run()
+    logging.info("--- Main log generation finished ---")
 
 if __name__ == "__main__":
     main()

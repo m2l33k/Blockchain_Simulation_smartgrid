@@ -1,39 +1,53 @@
-# anomaly_injector.py
+# anomaly_injector.py (Corrected for New Architecture)
 
 import random
 import time
 import logging
 import threading
-from typing import List
+from typing import List, Dict, Callable, Set
 
-# Import the node classes for type hinting and checking
-from models.grid_nodes import BaseNode, GridNode, Prosumer, Consumer, GridOperator
+# --- FIX: Import Blockchain for type hinting and usage ---
+from models.grid_nodes import BaseNode, GridNode, GridOperator
+from models.blockchain import Blockchain
 
 logger = logging.getLogger(__name__)
 
 class AnomalyInjector:
-    def __init__(self, all_nodes: List[BaseNode], grid_operator: GridOperator):
-        self.all_nodes = [node for node in all_nodes if isinstance(node, GridNode)]
-        self.grid_operator = grid_operator
-        self.active = False
+    # --- FIX: Add 'blockchain' to the constructor ---
+    def __init__(self, all_nodes: List[BaseNode], grid_operator: GridOperator, blockchain: Blockchain):
+        self.grid_nodes: List[GridNode] = [node for node in all_nodes if isinstance(node, GridNode)]
+        self.grid_operator: GridOperator = grid_operator
+        self.blockchain: Blockchain = blockchain  # <-- FIX: Store the blockchain instance
+        self.active: bool = False
         self.thread: threading.Thread = None
+
+        # --- STATE TRACKING ---
+        self.nodes_under_anomaly: Set[str] = set()
         
-        self.anomalies = [
-            self.inject_node_breakdown,
-            self.inject_energy_theft,
-            self.inject_meter_tampering,
-            self.inject_dos_attack,
-        ]
+        # --- ANOMALY DEFINITIONS ---
+        self.anomaly_methods: Dict[str, Callable] = {
+            'multi_stage_dos': self.inject_multi_stage_dos,
+            'energy_theft': self.inject_energy_theft,
+            'persistent_meter_tampering': self.inject_persistent_meter_tampering,
+            'coordinated_trading': self.inject_coordinated_inauthentic_trading,
+            'node_breakdown': self.inject_node_breakdown,
+        }
+        self.anomaly_weights: Dict[str, float] = {
+            'multi_stage_dos': 0.25,
+            'energy_theft': 0.20,
+            'persistent_meter_tampering': 0.30,
+            'coordinated_trading': 0.15,
+            'node_breakdown': 0.10,
+        }
 
-    def start(self, interval_seconds: int = 10):
-        if not self.all_nodes:
-            logger.warning("AnomalyInjector: No nodes to inject anomalies into. Stopping.")
+    def start(self, interval_ms: int = 10000, injection_probability: float = 0.25):
+        if not self.grid_nodes:
+            logger.warning("AnomalyInjector: No GridNodes to target. Stopping.")
             return
-
         self.active = True
-        self.thread = threading.Thread(target=self._run_loop, args=(interval_seconds,), daemon=True)
+        self.thread = threading.Thread(target=self._run_loop, args=(interval_ms, injection_probability), daemon=True)
         self.thread.start()
-        logger.info("Anomaly Injector started.")
+        logger.info("Enhanced Anomaly Injector started.")
 
     def stop(self):
         self.active = False
@@ -41,115 +55,148 @@ class AnomalyInjector:
             self.thread.join(timeout=1.0)
         logger.info("Anomaly Injector stopped.")
 
-    def _run_loop(self, interval: int):
+    def _run_loop(self, interval_ms: int, injection_probability: float):
+        interval_seconds = interval_ms / 1000.0
         while self.active:
-            sleep_time = random.uniform(interval * 0.8, interval * 1.2)
-            time.sleep(sleep_time)
-            
+            time.sleep(interval_seconds)
             if not self.active: break
+            
+            if random.random() < injection_probability:
+                chosen_anomaly = random.choices(list(self.anomaly_methods.keys()), weights=list(self.anomaly_weights.values()), k=1)[0]
+                try:
+                    self.anomaly_methods[chosen_anomaly]()
+                except Exception as e:
+                    logger.error(f"Error injecting anomaly '{chosen_anomaly}': {e}", exc_info=True)
 
-            chosen_anomaly = random.choice(self.anomalies)
-            chosen_anomaly()
+    def get_random_nodes(self, count: int, exclude_nodes: List[GridNode] = None) -> List[GridNode]:
+        exclude_ids = set(n.node_id for n in exclude_nodes) if exclude_nodes else set()
+        exclude_ids.update(self.nodes_under_anomaly) 
+        
+        possible_targets = [n for n in self.grid_nodes if n.active and n.node_id not in exclude_ids]
+        
+        if len(possible_targets) < count:
+            return [] 
+        
+        return random.sample(possible_targets, k=count)
 
     def inject_node_breakdown(self):
-        target_node = random.choice(self.all_nodes)
-        if not target_node.active: return
-
-        logger.warning(f"!!! ANOMALY: Injecting NODE BREAKDOWN on {target_node.node_id} !!!")
-        alert_message = f"ALERT: Node {target_node.node_id} has become unresponsive and is offline."
+        nodes_to_affect = self.get_random_nodes(1)
+        if not nodes_to_affect: return
+        target_node = nodes_to_affect[0]
         
-        target_node.stop()
-        
-        self.grid_operator.create_transaction(
-            "GRID_SECURITY", 0, 0, f"alert_node_offline:{target_node.node_id}"
-        )
-        print(f"\n🚨 {alert_message}\n")
+        target_node.active = False
+        self.nodes_under_anomaly.add(target_node.node_id)
+        logger.warning(f"!!! ANOMALY: Injecting NODE BREAKDOWN on {target_node.node_id}. Node is now permanently offline.")
+        print(f"\n🚨 ALERT: Node {target_node.node_id} has gone offline.\n")
 
     def inject_energy_theft(self):
-        malicious_node = random.choice(self.all_nodes)
-        # To avoid errors, ensure there's at least one other node to be a victim
-        possible_victims = [n for n in self.all_nodes if n != malicious_node]
-        if not possible_victims: return
-        victim_node = random.choice(possible_victims)
+        nodes = self.get_random_nodes(2)
+        if not nodes: return
+        malicious_node, victim_node = nodes[0], nodes[1]
         
-        theft_amount = random.uniform(10, 20)
+        theft_amount = random.uniform(15, 30)
+        logger.warning(f"!!! ANOMALY: {malicious_node.node_id} attempting THEFT of ${theft_amount:.2f} from {victim_node.node_id} !!!")
         
-        logger.warning(f"!!! ANOMALY: {malicious_node.node_id} attempting ENERGY THEFT from {victim_node.node_id} !!!")
-        alert_message = f"ALERT: Node {malicious_node.node_id} attempted a fraudulent transaction."
-        
-        if victim_node.blockchain:
-            victim_node.blockchain.new_transaction(
-                sender=victim_node.node_id,
-                recipient=malicious_node.node_id,
-                amount=theft_amount,
-                energy=0,
-                transaction_type="fraudulent_payment_attempt"
-            )
-        print(f"\n🚨 {alert_message}\n")
+        # --- FIX: Use self.blockchain.new_transaction ---
+        self.blockchain.new_transaction(
+            sender=victim_node.node_id,
+            recipient=malicious_node.node_id,
+            amount=theft_amount,
+            energy=0,
+            transaction_type="fraudulent_payment"
+        )
+        print(f"\n🚨 ALERT: Fraudulent high-value transaction submitted by {malicious_node.node_id}.\n")
 
-    def inject_meter_tampering(self):
-        """
-        Anomaly: A node's meter starts under-reporting consumption or over-reporting production.
-        """
-        target_node = random.choice(self.all_nodes)
-        
-        # Avoid re-tampering an already tampered meter
-        if hasattr(target_node.smart_meter, 'is_tampered'):
-            return
+    def inject_persistent_meter_tampering(self):
+        nodes_to_affect = self.get_random_nodes(1)
+        if not nodes_to_affect: return
+        target_node = nodes_to_affect[0]
 
-        logger.warning(f"!!! ANOMALY: Injecting METER TAMPERING on {target_node.node_id} !!!")
-        alert_message = f"ALERT: Suspicious readings detected from meter of {target_node.node_id}. Possible tampering."
+        logger.warning(f"!!! ANOMALY: Injecting PERSISTENT METER TAMPERING on {target_node.node_id} !!!")
+        self.nodes_under_anomaly.add(target_node.node_id)
         
-        # Get the actual SmartMeter instance we are going to tamper with
-        meter_to_tamper = target_node.smart_meter
-        # Save a reference to the original, untampered method
-        original_read_meter = meter_to_tamper.read_meter
-        
+        tamper_thread = threading.Thread(target=self._meter_tamper_worker, args=(target_node,), daemon=True)
+        tamper_thread.start()
+
+    def _meter_tamper_worker(self, target_node: GridNode):
+        meter = target_node.smart_meter
+        original_read_method = meter.read_meter
+        multiplier = random.choice([0.2, 1.8])
+
         def tampered_read_meter(*args, **kwargs):
-            """This function will replace the original read_meter method."""
-            # Call the original method to get the true reading
-            true_reading = original_read_meter(*args, **kwargs)
-            true_net_energy = true_reading['net_energy']
-
-            # Simulate tampering
-            if true_net_energy < 0:
-                # If the node is consuming, report that it's consuming LESS
-                # A smaller negative number (closer to zero) means less consumption
-                tampered_net_energy = true_net_energy * random.uniform(0.1, 0.5) # Report 10-50% of consumption
-            else:
-                # If the node is producing, report that it's producing MORE
-                tampered_net_energy = true_net_energy * random.uniform(1.2, 1.5) # Report 20-50% more production
-            
-            logger.debug(f"TAMPERING {target_node.node_id}: True Net: {true_net_energy:.2f}, Reported Net: {tampered_net_energy:.2f}")
-            
-            # Return the faked reading
-            true_reading['net_energy'] = tampered_net_energy
-            return true_reading
-            
-        # Replace the meter's method with our tampered version
-        meter_to_tamper.read_meter = tampered_read_meter
-        # Add a flag so we know this meter has been tampered with
-        meter_to_tamper.is_tampered = True
+            reading = original_read_method(*args, **kwargs)
+            reading['net_energy'] *= multiplier
+            return reading
         
-        print(f"\n🚨 {alert_message}\n")
-
-    def inject_dos_attack(self):
-        """
-        Anomaly: A node spams the grid operator with tiny, pointless requests.
-        """
-        attacking_node = random.choice(self.all_nodes)
+        meter.read_meter = tampered_read_meter
+        print(f"\n🚨 ALERT: Meter for {target_node.node_id} shows signs of tampering.\n")
         
-        logger.warning(f"!!! ANOMALY: {attacking_node.node_id} launching DoS attack on Grid Operator !!!")
-        alert_message = f"ALERT: Grid Operator is being spammed with requests from {attacking_node.node_id}."
-
-        for i in range(50):
-            # Use the direct submission method on the operator
-            if attacking_node.grid_operator:
-                 attacking_node.grid_operator.submit_request({
-                     'sender_id': attacking_node.node_id, 
-                     'energy': 0.01, 
-                     'price': 999 # A high price to ensure it doesn't get matched
-                 })
-            time.sleep(0.02)
+        tamper_duration = random.uniform(30, 90)
+        time.sleep(tamper_duration)
         
-        print(f"\n🚨 {alert_message}\n")
+        meter.read_meter = original_read_method
+        self.nodes_under_anomaly.remove(target_node.node_id)
+        logger.warning(f"--- ANOMALY END: Meter tampering for {target_node.node_id} has ended. ---")
+
+    def inject_multi_stage_dos(self):
+        nodes_to_affect = self.get_random_nodes(1)
+        if not nodes_to_affect: return
+        attacker = nodes_to_affect[0]
+
+        logger.warning(f"!!! ANOMALY: {attacker.node_id} beginning a MULTI-STAGE DoS ATTACK !!!")
+        self.nodes_under_anomaly.add(attacker.node_id)
+        
+        dos_thread = threading.Thread(target=self._dos_worker, args=(attacker,), daemon=True)
+        dos_thread.start()
+
+    def _dos_worker(self, attacker: GridNode):
+        print(f"\n📈 RAMP-UP: Suspiciously high traffic from {attacker.node_id}.\n")
+        for _ in range(random.randint(20, 40)):
+            if not self.active: break
+            # --- FIX: Use self.blockchain.new_transaction ---
+            self.blockchain.new_transaction(attacker.node_id, "dos_target", 0.01, 0.01, "spam_ramp_up")
+            time.sleep(random.uniform(0.05, 0.1))
+
+        print(f"\n🚨 ALERT: Full DoS spam attack initiated by {attacker.node_id}.\n")
+        for _ in range(random.randint(100, 200)):
+            if not self.active: break
+            # --- FIX: Use self.blockchain.new_transaction ---
+            self.blockchain.new_transaction(attacker.node_id, "dos_target", 0.001, 0.001, "spam_peak")
+            time.sleep(0.005)
+
+        time.sleep(random.uniform(5, 10))
+        self.nodes_under_anomaly.remove(attacker.node_id)
+        logger.warning(f"--- ANOMALY END: DoS attack from {attacker.node_id} has ceased. ---")
+
+    def inject_coordinated_inauthentic_trading(self):
+        colluders = self.get_random_nodes(2)
+        if not colluders: return
+        
+        node_a, node_b = colluders[0], colluders[1]
+        
+        logger.warning(f"!!! ANOMALY: Injecting COORDINATED INAUTHENTIC TRADING between {node_a.node_id} and {node_b.node_id} !!!")
+        print(f"\n🎭 ALERT: Unusual coordinated trading activity detected between nodes.\n")
+        
+        self.nodes_under_anomaly.add(node_a.node_id)
+        self.nodes_under_anomaly.add(node_b.node_id)
+        
+        trade_thread = threading.Thread(target=self._wash_trading_worker, args=(node_a, node_b), daemon=True)
+        trade_thread.start()
+        
+    def _wash_trading_worker(self, node_a: GridNode, node_b: GridNode):
+        for _ in range(random.randint(5, 15)):
+            if not self.active: break
+            
+            trade_amount_ab = random.uniform(1, 5)
+            # --- FIX: Use self.blockchain.new_transaction ---
+            self.blockchain.new_transaction(node_a.node_id, node_b.node_id, trade_amount_ab, 0, "wash_trade_payment")
+            time.sleep(random.uniform(0.1, 0.5))
+            
+            trade_amount_ba = random.uniform(1, 5)
+            # --- FIX: Use self.blockchain.new_transaction ---
+            self.blockchain.new_transaction(node_b.node_id, node_a.node_id, trade_amount_ba, 0, "wash_trade_payment")
+            time.sleep(random.uniform(0.1, 0.5))
+            
+        self.nodes_under_anomaly.remove(node_a.node_id)
+        self.nodes_under_anomaly.remove(node_b.node_id)
+        logger.warning(f"--- ANOMALY END: Coordinated trading between {node_a.node_id} and {node_b.node_id} has ended. ---")

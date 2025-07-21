@@ -1,4 +1,4 @@
-# fraud_detector.py (Final Corrected Version)
+# fraud_detector.py
 
 import time
 import logging
@@ -7,34 +7,33 @@ import numpy as np
 import pandas as pd
 import json
 import os
-from typing import List, Optional
-from collections import deque
+from typing import Optional
+
 from tensorflow.keras.models import load_model
 import joblib
 
 from utils.feature_extractor import extract_features_from_block
 from models.blockchain import Blockchain
-try:
-    from train_model import TransformerEncoderBlock
-except ImportError:
-    TransformerEncoderBlock = None
+from models.custom_layers import TransformerEncoderBlock
 
 logger = logging.getLogger(__name__)
 
 class FraudDetector:
     def __init__(self, blockchain: Blockchain):
         self.blockchain = blockchain
-        self.sequence_length = 20
+        self.sequence_length = 20  # This must match the training script
         self.active = False
         self.thread: Optional[threading.Thread] = None
-        
-        # Load all assets and set the readiness flag
-        self.model = self._load_asset('saved_models/anomaly_detection_hybrid_model.keras', load_model)
+
+        # --- Load all assets ---
+        custom_objects = {"TransformerEncoderBlock": TransformerEncoderBlock}
+        self.model = self._load_asset('saved_models/anomaly_detection_hybrid_model.keras', load_model, custom_objects)
         self.scaler = self._load_asset('saved_models/data_scaler.joblib', joblib.load)
         self.feature_columns = self._load_asset('saved_models/feature_columns.json', json.load)
         self.miner_id_mapping = self._load_asset('saved_models/miner_id_mapping.json', json.load)
         threshold_data = self._load_asset('saved_models/alert_threshold.json', json.load)
-        self.alert_threshold = threshold_data.get('threshold', 0.85) if threshold_data else 0.85
+        
+        self.alert_threshold = threshold_data.get('threshold', 0.6) if threshold_data else 0.6
         
         self.is_ready = all([self.model, self.scaler, self.feature_columns, self.miner_id_mapping])
         if self.is_ready:
@@ -42,10 +41,10 @@ class FraudDetector:
         else:
             logging.error("FraudDetector failed to initialize due to missing assets.")
             
-        # Use a deque as an efficient rolling window for features
-        self.feature_history = deque(maxlen=self.sequence_length)
+        # NOTE: The self.feature_history deque has been removed as it's no longer needed.
 
-    def _load_asset(self, path: str, loader_func):
+    def _load_asset(self, path: str, loader_func, custom_objects=None):
+        """Loads a file asset (model, scaler, or JSON)."""
         if not os.path.exists(path):
             logging.error(f"Asset not found at path: {path}")
             return None
@@ -54,10 +53,7 @@ class FraudDetector:
                 with open(path, 'r') as f:
                     return loader_func(f)
             elif loader_func == load_model:
-                if TransformerEncoderBlock is None:
-                    logging.warning("TransformerEncoderBlock class not imported; model loading might fail if it's a custom object.")
-                # Pass the custom object so Keras knows how to load the model
-                return loader_func(path, custom_objects={"TransformerEncoderBlock": TransformerEncoderBlock})
+                return loader_func(path, custom_objects=custom_objects, safe_mode=False)
             else:
                 return loader_func(path)
         except Exception as e:
@@ -68,7 +64,6 @@ class FraudDetector:
         if not self.is_ready:
             logging.error("FraudDetector cannot start because it is not ready.")
             return
-
         self.active = True
         self.thread = threading.Thread(target=self._run_loop, daemon=True)
         self.thread.start()
@@ -81,53 +76,80 @@ class FraudDetector:
         logging.info("Live Fraud Detector stopped.")
 
     def _run_loop(self):
-        last_processed_index = 0
+        """
+        CORRECTED: A robust loop that processes a block only when its full
+        preceding sequence is available.
+        """
+        # Start predicting from the first block that has a full history.
+        # To predict for block at index 20, we need blocks 0-19.
+        next_block_to_predict = self.sequence_length
+        
         while self.active:
             with self.blockchain.lock:
                 chain_length = len(self.blockchain.chain)
             
-            if chain_length > last_processed_index:
-                for i in range(last_processed_index + 1, chain_length):
-                    self.process_new_block(i)
-                last_processed_index = chain_length - 1
-            
-            time.sleep(1)
+            # If there's a new block to process that has enough history, predict on it.
+            if next_block_to_predict < chain_length:
+                self._run_prediction_on_block(next_block_to_predict)
+                next_block_to_predict += 1
+            else:
+                # Wait for more blocks to be mined
+                time.sleep(1)
 
-    def process_new_block(self, block_index: int):
-        """Processes a single new block, updates the feature history, and predicts."""
+    def _run_prediction_on_block(self, target_block_index: int):
+        """
+        CORRECTED: Uses the 20 blocks *before* target_block_index to predict its status.
+        This now matches the logic from the training script.
+        """
+        sequence_features = []
         with self.blockchain.lock:
-            current_block_data = self.blockchain.chain[block_index].to_dict()
-            prev_block_timestamp = self.blockchain.chain[block_index - 1].timestamp
-        
-        features = extract_features_from_block(current_block_data, prev_block_timestamp)
-        self.feature_history.append(features)
-        
-        if len(self.feature_history) < self.sequence_length:
-            return # Wait for a full sequence
+            # Define the slice of the blockchain to use for the feature sequence
+            start_index = target_block_index - self.sequence_length
+            end_index = target_block_index # The slice is exclusive of the end index
 
-        live_df = pd.DataFrame(list(self.feature_history))
+            if start_index < 0:
+                logging.warning(f"Attempted to predict on block {target_block_index} without enough history.")
+                return
+
+            # Extract features for each block in the sequence
+            for i in range(start_index, end_index):
+                current_block_data = self.blockchain.chain[i].to_dict()
+                # Genesis block (index 0) has no predecessor
+                prev_block_timestamp = self.blockchain.chain[i - 1].timestamp if i > 0 else 0
+                features = extract_features_from_block(current_block_data, prev_block_timestamp)
+                sequence_features.append(features)
         
-        # --- FIX: Convert string 'miner_id' to the numerical code the model expects ---
+        # --- Prepare data for the model (same steps as before, but on the correct sequence) ---
+        live_df = pd.DataFrame(sequence_features)
+        
+        # Map categorical 'miner_id' to integer representation
         live_df['miner_id'] = live_df['miner_id'].map(self.miner_id_mapping).fillna(-1).astype(int)
         
-        # Reorder columns to match the training data exactly
-        live_features_ordered = live_df[self.feature_columns]
-        
-        # Scale data using the loaded scaler
+        # Ensure the column order matches the training data
+        try:
+            live_features_ordered = live_df[self.feature_columns]
+        except KeyError as e:
+            logging.error(f"Mismatched columns when preparing live data for block #{target_block_index}: {e}")
+            return
+            
+        # Scale the features using the loaded scaler
         scaled_live_features = self.scaler.transform(live_features_ordered)
         
-        if np.isnan(scaled_live_features).any():
-            scaled_live_features = np.nan_to_num(scaled_live_features)
-            
+        # REMOVED: The dangerous np.nan_to_num call is no longer here.
+        # If NaNs appear, it means the feature extractor has a bug, and we want to see that error.
+        
+        # Reshape data into a single sequence for the model
         live_sequence = np.expand_dims(scaled_live_features, axis=0)
         
+        # --- Make a prediction ---
         prediction_proba = self.model.predict(live_sequence, verbose=0)[0][0]
         
         is_alert = prediction_proba > self.alert_threshold
         log_level = logging.WARNING if is_alert else logging.INFO
         
-        logger.log(log_level, f"Detector check on Block #{block_index}: Score = {prediction_proba:.4f} (Threshold = {self.alert_threshold:.4f})")
+        # Log the result for the correct target block
+        logger.log(log_level, f"Detector check on Block #{target_block_index}: Score = {prediction_proba:.4f} (Threshold = {self.alert_threshold:.4f})")
         
         if is_alert:
-            alert_message = (f"!!! LIVE ALERT: Anomaly detected in Block #{block_index} with {prediction_proba:.2%} confidence !!!")
-            print(f"\n🚨 {alert_message}\n")
+            alert_message = (f"!!! LIVE ALERT: Anomaly detected in Block #{target_block_index} with {prediction_proba:.2%} confidence !!!")
+            logger.warning(alert_message)

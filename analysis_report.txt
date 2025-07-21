@@ -1,0 +1,237 @@
+================================================================================
+Simulation Log Analysis Report
+================================================================================
+
+--- Overall Performance ---
+
+Total Anomalies Injected: 41
+Anomalies Detected: 37
+Overall Detection Rate: 90.24%
+Average Detection Latency: 4.52 seconds
+
+
+--- Anomaly Injection Details ---
+
+[MISSED] 23:05:13 - Node Breakdown
+    - Target Node: CON-01
+[DETECTED] 23:05:24 - DoS Attack (Duration: 8.78s) (Latency: 22.19s)
+    - Target Node: CON-02
+[DETECTED] 23:05:26 - Theft (Latency: 38.42s)
+    - Details: Attacker PRO-08, Victim CON-16, Amount $25.91
+[DETECTED] 23:05:31 - Meter Tampering (Latency: 11.62s)
+    - Target Node: CON-17
+[DETECTED] 23:05:33 - Wash Trading (Duration: 8.19s) (Latency: 9.62s)
+    - Involved Nodes: PRO-05, PRO-06
+[DETECTED] 23:05:35 - Wash Trading (Duration: 6.46s) (Latency: 7.62s)
+    - Involved Nodes: PRO-09, PRO-04
+[DETECTED] 23:05:39 - Wash Trading (Duration: 4.52s) (Latency: 3.62s)
+    - Involved Nodes: CON-00, PRO-00
+[DETECTED] 23:05:41 - DoS Attack (Duration: 9.92s) (Latency: 1.61s)
+    - Target Node: CON-05
+[DETECTED] 23:06:04 - Theft (Latency: 0.33s)
+    - Details: Attacker CON-10, Victim CON-06, Amount $28.00
+[DETECTED] 23:06:19 - Node Breakdown (Latency: 11.62s)
+    - Target Node: PRO-02
+[DETECTED] 23:06:30 - Theft (Latency: 0.61s)
+    - Details: Attacker CON-13, Victim CON-15, Amount $25.36
+[MISSED] 23:06:52 - Meter Tampering
+    - Target Node: PRO-09
+[DETECTED] 23:07:24 - Meter Tampering (Latency: 10.69s)
+    - Target Node: CON-07
+[DETECTED] 23:07:34 - Wash Trading (Duration: 3.86s) (Latency: 0.69s)
+    - Involved Nodes: CON-08, PRO-07
+[DETECTED] 23:07:37 - DoS Attack (Duration: 12.63s) (Latency: 1.02s)
+    - Target Node: PRO-06
+[DETECTED] 23:07:40 - DoS Attack (Duration: 9.75s) (Latency: 0.47s)
+    - Target Node: PRO-00
+[DETECTED] 23:07:46 - Wash Trading (Duration: 4.93s) (Latency: 1.49s)
+    - Involved Nodes: CON-11, CON-15
+[DETECTED] 23:07:48 - Node Breakdown (Latency: 1.62s)
+    - Target Node: PRO-03
+[DETECTED] 23:07:51 - Theft (Latency: 0.75s)
+    - Details: Attacker CON-15, Victim PRO-05, Amount $16.29
+[MISSED] 23:07:59 - Meter Tampering
+    - Target Node: CON-10
+[MISSED] 23:08:02 - Meter Tampering
+    - Target Node: PRO-01
+[DETECTED] 23:08:16 - Meter Tampering (Latency: 5.84s)
+    - Target Node: PRO-06
+[DETECTED] 23:08:20 - Meter Tampering (Latency: 1.84s)
+    - Target Node: CON-03
+[DETECTED] 23:08:21 - Theft (Latency: 0.84s)
+    - Details: Attacker CON-17, Victim CON-00, Amount $28.06
+[DETECTED] 23:08:25 - DoS Attack (Duration: 13.05s) (Latency: 0.95s)
+    - Target Node: CON-07
+[DETECTED] 23:08:30 - Meter Tampering (Latency: 0.36s)
+    - Target Node: CON-14
+[DETECTED] 23:08:32 - DoS Attack (Duration: 11.20s) (Latency: 3.03s)
+    - Target Node: PRO-04
+[DETECTED] 23:08:34 - Meter Tampering (Latency: 1.03s)
+    - Target Node: CON-17
+[DETECTED] 23:08:39 - DoS Attack (Duration: 12.17s) (Latency: 3.97s)
+    - Target Node: PRO-00
+[DETECTED] 23:08:41 - Theft (Latency: 1.97s)
+    - Details: Attacker CON-10, Victim CON-07, Amount $21.06
+[DETECTED] 23:08:45 - Meter Tampering (Latency: 8.32s)
+    - Target Node: CON-02
+[DETECTED] 23:08:49 - DoS Attack (Duration: 9.94s) (Latency: 4.32s)
+    - Target Node: CON-10
+[DETECTED] 23:08:52 - Wash Trading (Duration: 8.56s) (Latency: 1.31s)
+    - Involved Nodes: PRO-00, PRO-09
+[DETECTED] 23:09:05 - DoS Attack (Duration: 10.33s) (Latency: 1.04s)
+    - Target Node: CON-16
+[DETECTED] 23:09:08 - Wash Trading (Duration: 8.73s) (Latency: 0.24s)
+    - Involved Nodes: CON-10, CON-12
+[DETECTED] 23:09:09 - Meter Tampering (Latency: 0.43s)
+    - Target Node: PRO-04
+[DETECTED] 23:09:13 - Theft (Latency: 0.78s)
+    - Details: Attacker CON-05, Victim PRO-05, Amount $23.28
+[DETECTED] 23:09:32 - Theft (Latency: 0.13s)
+    - Details: Attacker PRO-00, Victim PRO-09, Amount $25.52
+[DETECTED] 23:09:33 - Node Breakdown (Latency: 5.20s)
+    - Target Node: CON-06
+[DETECTED] 23:09:54 - DoS Attack (Latency: 0.27s)
+    - Target Node: CON-12
+[DETECTED] 23:09:56 - Meter Tampering (Latency: 1.51s)
+    - Target Node: CON-15
+
+Anomaly Counts by Type:
+- Node Breakdown: 4
+- DoS Attack: 10
+- Theft: 8
+- Meter Tampering: 12
+- Wash Trading: 7
+
+
+--- Detection Alert Details ---
+
+Time       Block ID   Confidence Score    
+---------------------------------------------
+23:05:42   20         14.32%              
+23:05:43   21         27.85%              
+23:05:43   22         25.01%              
+23:05:43   23         25.81%              
+23:05:44   24         25.82%              
+23:05:44   25         28.23%              
+23:05:44   26         29.85%              
+23:05:44   27         24.56%              
+23:05:46   28         27.01%              
+23:05:46   29         38.49%              
+23:05:47   30         30.85%              
+23:05:48   31         28.10%              
+23:05:49   32         29.87%              
+23:05:50   33         29.28%              
+23:05:50   34         19.32%              
+23:05:51   35         26.49%              
+23:05:52   36         27.99%              
+23:05:53   37         27.39%              
+23:05:54   38         23.34%              
+23:05:55   39         23.53%              
+23:05:56   40         17.72%              
+23:05:57   41         24.24%              
+23:05:58   42         17.11%              
+23:05:59   43         21.96%              
+23:06:00   44         23.13%              
+23:06:01   45         18.29%              
+23:06:02   46         27.12%              
+23:06:03   47         23.41%              
+23:06:04   48         24.67%              
+23:06:04   49         20.17%              
+23:06:06   50         62.90%              
+23:06:09   51         21.67%              
+23:06:16   52         29.75%              
+23:06:30   53         26.05%              
+23:07:35   54         49.38%              
+23:07:36   55         21.08%              
+23:07:36   56         18.77%              
+23:07:37   57         22.00%              
+23:07:37   58         25.19%              
+23:07:38   59         25.50%              
+23:07:39   60         27.10%              
+23:07:39   61         19.80%              
+23:07:39   62         19.43%              
+23:07:39   63         19.61%              
+23:07:40   64         19.39%              
+23:07:41   65         17.89%              
+23:07:41   66         18.52%              
+23:07:41   67         17.21%              
+23:07:41   68         16.91%              
+23:07:41   69         16.70%              
+23:07:41   70         12.29%              
+23:07:41   71         13.40%              
+23:07:41   72         11.75%              
+23:07:41   73         12.42%              
+23:07:42   74         11.27%              
+23:07:42   75         11.26%              
+23:07:43   79         14.72%              
+23:07:44   82         13.36%              
+23:07:47   84         10.28%              
+23:07:50   86         11.24%              
+23:07:51   87         10.78%              
+23:07:52   88         10.63%              
+23:08:22   89         26.40%              
+23:08:26   90         19.02%              
+23:08:27   91         10.96%              
+23:08:27   92         11.84%              
+23:08:28   93         10.68%              
+23:08:28   94         12.21%              
+23:08:29   95         10.69%              
+23:08:30   96         20.37%              
+23:08:35   99         11.31%              
+23:08:35   100        11.74%              
+23:08:35   102        12.01%              
+23:08:35   103        11.23%              
+23:08:35   105        12.15%              
+23:08:35   106        10.12%              
+23:08:36   109        10.76%              
+23:08:43   120        19.86%              
+23:08:43   122        9.89%               
+23:08:44   137        9.89%               
+23:08:53   155        15.79%              
+23:08:56   158        9.88%               
+23:08:58   159        10.50%              
+23:08:59   161        15.38%              
+23:09:00   163        12.77%              
+23:09:01   164        12.26%              
+23:09:02   165        14.06%              
+23:09:06   166        13.40%              
+23:09:07   167        13.73%              
+23:09:07   168        14.06%              
+23:09:08   169        13.19%              
+23:09:08   170        12.95%              
+23:09:08   171        14.36%              
+23:09:09   172        13.37%              
+23:09:10   173        27.14%              
+23:09:12   174        20.70%              
+23:09:13   175        17.55%              
+23:09:13   176        14.23%              
+23:09:14   177        16.85%              
+23:09:15   178        15.46%              
+23:09:16   179        42.13%              
+23:09:17   180        18.05%              
+23:09:18   181        16.62%              
+23:09:32   182        21.21%              
+23:09:38   183        39.39%              
+23:09:39   184        24.36%              
+23:09:40   185        20.96%              
+23:09:41   186        14.31%              
+23:09:42   187        20.86%              
+23:09:44   188        35.14%              
+23:09:45   189        17.68%              
+23:09:46   190        23.41%              
+23:09:47   191        26.72%              
+23:09:48   192        23.39%              
+23:09:50   193        30.42%              
+23:09:50   194        29.23%              
+23:09:51   195        22.79%              
+23:09:52   196        25.06%              
+23:09:53   197        29.57%              
+23:09:54   198        27.22%              
+23:09:54   199        17.12%              
+23:09:54   200        23.47%              
+23:09:55   201        20.57%              
+23:09:57   202        21.55%              
+23:09:58   203        26.83%              
+23:09:59   204        29.65%              
+
+================================================================================
