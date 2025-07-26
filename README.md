@@ -1,72 +1,98 @@
-# Smart Grid Blockchain Simulation
+# Smart Grid Blockchain Simulation with Anomaly Detection
 
-A decentralized energy trading platform that simulates a smart grid system using blockchain technology to securely record and verify energy transactions between different types of nodes.
+This project implements a blockchain-based smart grid system with integrated anomaly detection capabilities using machine learning. The system simulates grid node behavior, monitors transactions, and detects potential anomalies in real-time.
 
-## Overview
+## System Overview
 
-This simulation creates a virtual power grid with prosumers, consumers, and a grid operator that interact to trade energy in a decentralized marketplace. Energy transactions are recorded on a blockchain, providing a transparent and immutable ledger.
+The system consists of multiple components that work together to simulate and monitor a blockchain-based smart grid:
 
-## Features
+- Blockchain simulation engine
+- Real-time anomaly detection
+- LSTM-based autoencoder for unsupervised learning
+- Performance monitoring and visualization
+- Data preprocessing and feature extraction pipeline
 
-- **Decentralized Energy Trading**: Peer-to-peer energy transactions between grid participants
-- **Blockchain Implementation**: Secure transaction verification with customizable mining difficulty
-- **Dynamic Node Behavior**: Prosumers and consumers with realistic energy production/consumption patterns
-- **Grid Management**: Central grid operator that facilitates trades and maintains grid stability
-- **Real-time Simulation**: Time-accelerated simulation with configurable duration
-- **Comprehensive Logging**: Detailed transaction and system state logging
+## Key Features
 
-## System Components
+- Real-time transaction monitoring
+- Unsupervised anomaly detection
+- Performance metrics tracking
+- Visualization dashboard
+- Configurable simulation parameters
 
-- **Prosumers**: Entities that both produce and consume energy (e.g., houses with solar panels)
-- **Consumers**: Entities that only consume energy from the grid
-- **Grid Operator**: Central entity that manages the grid and facilitates energy trading
-- **Blockchain**: Distributed ledger that records all energy transactions
+## Visualizations
 
-## Running the Simulation
+### System Performance Analysis
 
-Use the included shell script to run the simulation with default parameters:
+![Latency Distribution](visualized_data/latency_distribution_histogram.png)
+*Distribution of transaction processing latencies across the network*
+
+![Miner Activity](visualized_data/miner_activity.png)
+*Temporal analysis of miner participation and block creation*
+
+### Anomaly Detection Insights
+
+![Feature Correlation Heatmap](visualized_data/feature_correlation_heatmap.png)
+*Correlation analysis of blockchain features used in anomaly detection*
+
+![Key Features Over Time](visualized_data/key_features_over_time.png)
+*Temporal evolution of critical blockchain metrics*
+
+### Model Performance
+
+![Reconstruction Errors](visualized_data/reconstruction_errors.png)
+*LSTM autoencoder reconstruction error patterns*
+
+![Feature-wise Reconstruction Error](visualized_data/feature_wise_reconstruction_error.png)
+*Detailed analysis of reconstruction errors by feature*
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+### Running the Simulation
 
 ```bash
 ./run.sh
 ```
 
-Or run manually with custom parameters:
+### Training the Model
 
 ```bash
-python main.py --prosumers 5 --consumers 10 --difficulty 4 --duration 360
+python train_model.py
 ```
 
-### Parameters
+### Live Detection
 
-- `--prosumers`: Number of prosumer nodes (default: 5)
-- `--consumers`: Number of consumer nodes (default: 10)
-- `--difficulty`: Blockchain mining difficulty (default: 4)
-- `--duration`: Simulation duration in seconds (default: 120)
+```bash
+python fraud_detector.py
+```
 
-## Logging
+## Project Structure
 
-All simulation activities are logged to both the console and `smartgrid_simulation.log` file. The log includes:
+- `models/` - Core blockchain and ML model implementations
+- `utils/` - Helper functions and utilities
+- `data/` - Dataset storage
+- `visualized_data/` - Generated visualizations and analysis
+- `notebooks/` - Jupyter notebooks for data exploration
+- `saved_models/` - Trained model checkpoints
 
-- Blockchain operations (block mining, transaction validation)
-- Energy trades between nodes
-- Node status updates
-- System-wide statistics
+## Performance Metrics
 
-## Development
+The system's performance is continuously monitored and visualized:
 
-### Requirements
+![Latency by Anomaly Type](visualized_data/latency_by_anomaly_type.png)
+*Impact of different anomaly types on system latency*
 
-- Python 3.8+
-- Required packages listed in `requirements.txt`
+## Contributing
 
-### Project Structure
-
-- `main.py`: Entry point and simulation orchestration
-- `models/`: Core system models
-  - `blockchain.py`: Blockchain implementation
-  - `grid_nodes.py`: Node implementations (Prosumer, Consumer, GridOperator)
-- `utils/`: Utility functions
-- `run.sh`: Convenience script for running the simulation
+Contributions are welcome! Please feel free to submit pull requests.
 
 ## License
 

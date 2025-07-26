@@ -1,9 +1,0 @@
---- Script starting ---
-2025-07-17 07:46:19,234 - root               - INFO     - --- Logging configured successfully ---
-2025-07-17 07:46:19,247 - db_utils           - WARNING  - mysql-connector-python not installed. Database functionality will be disabled.
-2025-07-17 07:46:19,247 - db_utils           - WARNING  - To enable database support, install: pip install mysql-connector-python
-2025-07-17 07:46:19,465 - root               - CRITICAL - A required module is missing. Please check your file structure. Error: cannot import name 'generate_and_save_data' from 'data_preprocessor' (/home/m2l3k/Desktop/BlockchainNode/data_preprocessor.py)
-Traceback (most recent call last):
-  File "/home/m2l3k/Desktop/BlockchainNode/main.py", line 30, in <module>
-    from data_preprocessor import generate_and_save_data
-ImportError: cannot import name 'generate_and_save_data' from 'data_preprocessor' (/home/m2l3k/Desktop/BlockchainNode/data_preprocessor.py)

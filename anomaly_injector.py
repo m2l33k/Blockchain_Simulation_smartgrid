@@ -1,4 +1,4 @@
-# anomaly_injector.py (Corrected for New Architecture)
+# anomaly_injector.py (Corrected for New Architecture and Latency Recording)
 
 import random
 import time
@@ -6,18 +6,20 @@ import logging
 import threading
 from typing import List, Dict, Callable, Set
 
-# --- FIX: Import Blockchain for type hinting and usage ---
 from models.grid_nodes import BaseNode, GridNode, GridOperator
 from models.blockchain import Blockchain
+
+# --- ADD THIS IMPORT ---
+# Import the latency recording utility
+from utils.latency_recorder import record_latency_event
 
 logger = logging.getLogger(__name__)
 
 class AnomalyInjector:
-    # --- FIX: Add 'blockchain' to the constructor ---
     def __init__(self, all_nodes: List[BaseNode], grid_operator: GridOperator, blockchain: Blockchain):
         self.grid_nodes: List[GridNode] = [node for node in all_nodes if isinstance(node, GridNode)]
         self.grid_operator: GridOperator = grid_operator
-        self.blockchain: Blockchain = blockchain  # <-- FIX: Store the blockchain instance
+        self.blockchain: Blockchain = blockchain
         self.active: bool = False
         self.thread: threading.Thread = None
 
@@ -86,7 +88,13 @@ class AnomalyInjector:
         
         target_node.active = False
         self.nodes_under_anomaly.add(target_node.node_id)
-        logger.warning(f"!!! ANOMALY: Injecting NODE BREAKDOWN on {target_node.node_id}. Node is now permanently offline.")
+        
+        log_message = f"Injecting NODE BREAKDOWN on {target_node.node_id}. Node is now permanently offline."
+        logger.warning(f"!!! ANOMALY: {log_message}")
+        
+        # --- ADD LATENCY RECORDING ---
+        record_latency_event('injection', f"Breakdown on {target_node.node_id}")
+        
         print(f"\n🚨 ALERT: Node {target_node.node_id} has gone offline.\n")
 
     def inject_energy_theft(self):
@@ -95,9 +103,13 @@ class AnomalyInjector:
         malicious_node, victim_node = nodes[0], nodes[1]
         
         theft_amount = random.uniform(15, 30)
-        logger.warning(f"!!! ANOMALY: {malicious_node.node_id} attempting THEFT of ${theft_amount:.2f} from {victim_node.node_id} !!!")
         
-        # --- FIX: Use self.blockchain.new_transaction ---
+        log_message = f"{malicious_node.node_id} attempting THEFT of ${theft_amount:.2f} from {victim_node.node_id}"
+        logger.warning(f"!!! ANOMALY: {log_message} !!!")
+        
+        # --- ADD LATENCY RECORDING ---
+        record_latency_event('injection', f"Theft from {victim_node.node_id} by {malicious_node.node_id}")
+        
         self.blockchain.new_transaction(
             sender=victim_node.node_id,
             recipient=malicious_node.node_id,
@@ -112,7 +124,12 @@ class AnomalyInjector:
         if not nodes_to_affect: return
         target_node = nodes_to_affect[0]
 
-        logger.warning(f"!!! ANOMALY: Injecting PERSISTENT METER TAMPERING on {target_node.node_id} !!!")
+        log_message = f"Injecting PERSISTENT METER TAMPERING on {target_node.node_id}"
+        logger.warning(f"!!! ANOMALY: {log_message} !!!")
+        
+        # --- ADD LATENCY RECORDING ---
+        record_latency_event('injection', f"Tampering on {target_node.node_id}")
+        
         self.nodes_under_anomaly.add(target_node.node_id)
         
         tamper_thread = threading.Thread(target=self._meter_tamper_worker, args=(target_node,), daemon=True)
@@ -143,7 +160,12 @@ class AnomalyInjector:
         if not nodes_to_affect: return
         attacker = nodes_to_affect[0]
 
-        logger.warning(f"!!! ANOMALY: {attacker.node_id} beginning a MULTI-STAGE DoS ATTACK !!!")
+        log_message = f"{attacker.node_id} beginning a MULTI-STAGE DoS ATTACK"
+        logger.warning(f"!!! ANOMALY: {log_message} !!!")
+        
+        # --- ADD LATENCY RECORDING ---
+        record_latency_event('injection', f"DoS from {attacker.node_id}")
+        
         self.nodes_under_anomaly.add(attacker.node_id)
         
         dos_thread = threading.Thread(target=self._dos_worker, args=(attacker,), daemon=True)
@@ -153,14 +175,12 @@ class AnomalyInjector:
         print(f"\n📈 RAMP-UP: Suspiciously high traffic from {attacker.node_id}.\n")
         for _ in range(random.randint(20, 40)):
             if not self.active: break
-            # --- FIX: Use self.blockchain.new_transaction ---
             self.blockchain.new_transaction(attacker.node_id, "dos_target", 0.01, 0.01, "spam_ramp_up")
             time.sleep(random.uniform(0.05, 0.1))
 
         print(f"\n🚨 ALERT: Full DoS spam attack initiated by {attacker.node_id}.\n")
         for _ in range(random.randint(100, 200)):
             if not self.active: break
-            # --- FIX: Use self.blockchain.new_transaction ---
             self.blockchain.new_transaction(attacker.node_id, "dos_target", 0.001, 0.001, "spam_peak")
             time.sleep(0.005)
 
@@ -174,7 +194,12 @@ class AnomalyInjector:
         
         node_a, node_b = colluders[0], colluders[1]
         
-        logger.warning(f"!!! ANOMALY: Injecting COORDINATED INAUTHENTIC TRADING between {node_a.node_id} and {node_b.node_id} !!!")
+        log_message = f"Injecting COORDINATED INAUTHENTIC TRADING between {node_a.node_id} and {node_b.node_id}"
+        logger.warning(f"!!! ANOMALY: {log_message} !!!")
+        
+        # --- ADD LATENCY RECORDING ---
+        record_latency_event('injection', f"Coordinated trading between {node_a.node_id} and {node_b.node_id}")
+        
         print(f"\n🎭 ALERT: Unusual coordinated trading activity detected between nodes.\n")
         
         self.nodes_under_anomaly.add(node_a.node_id)
@@ -188,12 +213,10 @@ class AnomalyInjector:
             if not self.active: break
             
             trade_amount_ab = random.uniform(1, 5)
-            # --- FIX: Use self.blockchain.new_transaction ---
             self.blockchain.new_transaction(node_a.node_id, node_b.node_id, trade_amount_ab, 0, "wash_trade_payment")
             time.sleep(random.uniform(0.1, 0.5))
             
             trade_amount_ba = random.uniform(1, 5)
-            # --- FIX: Use self.blockchain.new_transaction ---
             self.blockchain.new_transaction(node_b.node_id, node_a.node_id, trade_amount_ba, 0, "wash_trade_payment")
             time.sleep(random.uniform(0.1, 0.5))
             

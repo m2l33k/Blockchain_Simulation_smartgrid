@@ -1,5 +1,3 @@
-# models/blockchain.py (Final Corrected Version)
-
 from __future__ import annotations
 import hashlib
 import json
