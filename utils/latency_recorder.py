@@ -1,35 +1,59 @@
-# utils/latency_recorder.py
-
 import time
 import threading
 import os
 
-# Use a lock to prevent race conditions when writing to the file from different threads
-LATENCY_FILE_LOCK = threading.Lock()
-LATENCY_FILE_PATH = 'latency_log.csv'
+class LatencyRecorder:
+    _instance = None
+    _lock = threading.Lock()
 
-def initialize_latency_log():
-    """Creates the latency log file with a header if it doesn't exist."""
-    if not os.path.exists(LATENCY_FILE_PATH):
-        with LATENCY_FILE_LOCK:
-            with open(LATENCY_FILE_PATH, 'w') as f:
-                f.write("timestamp,event_type,details\n")
+    def __new__(cls):
+        # This makes the class a singleton, ensuring only one instance ever exists
+        # and that the file is only initialized once per application run.
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super(LatencyRecorder, cls).__new__(cls)
+                cls._instance._initialized = False
+        return cls._instance
 
+    def __init__(self):
+        # The __init__ is called every time, but our logic only runs once
+        if self._initialized:
+            return
+        
+        with self._lock:
+            self.file_path = 'latency_log.csv'
+            # Initialize the file with a header if it doesn't exist
+            if not os.path.exists(self.file_path):
+                with open(self.file_path, 'w') as f:
+                    f.write("timestamp,event_type,details\n")
+            self._initialized = True
+
+    def record_event(self, event_type: str, details: str):
+        """Records a timestamped event to the CSV log file in a thread-safe manner."""
+        timestamp = time.time()
+        # Sanitize details by removing commas to not break the CSV format
+        sanitized_details = str(details).replace(',', ';')
+        
+        with self._lock:
+            try:
+                with open(self.file_path, 'a') as f:
+                    f.write(f"{timestamp},{event_type},{sanitized_details}\n")
+            except Exception as e:
+                # Use print for critical errors as logging might not be configured
+                print(f"CRITICAL ERROR writing to latency log: {e}")
+
+# Create a single, globally accessible instance of the recorder
+recorder = LatencyRecorder()
+
+# Define simple functions that are easy to import and use this global instance
 def record_latency_event(event_type: str, details: str):
-    """
-    Records a timestamped event to the latency log file in a thread-safe manner.
+    recorder.record_event(event_type, details)
 
-    Args:
-        event_type (str): Either 'injection' or 'detection'.
-        details (str): Information about the event (e.g., anomaly type, block index).
-    """
-    timestamp = time.time()
-    # Sanitize details by removing commas to not break the CSV format
-    sanitized_details = details.replace(',', ';')
-    
-    with LATENCY_FILE_LOCK:
-        try:
-            with open(LATENCY_FILE_PATH, 'a') as f:
-                f.write(f"{timestamp},{event_type},{sanitized_details}\n")
-        except Exception as e:
-            print(f"Error writing to latency log: {e}")
+def clear_latency_log():
+    # This function now safely handles clearing the log
+    with recorder._lock:
+        if os.path.exists(recorder.file_path):
+            os.remove(recorder.file_path)
+        # Re-initialize it immediately with the header
+        with open(recorder.file_path, 'w') as f:
+            f.write("timestamp,event_type,details\n")

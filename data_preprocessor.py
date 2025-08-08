@@ -14,7 +14,7 @@ except ImportError:
     exit(1)
 
 # --- Configuration ---
-LOG_FILE_PATH = 'data_generation_run.log'
+LOG_FILE_PATH = 'simulation_logs/simulation_run_2025-07-26_13-27-36.log'
 OUTPUT_DIR = 'data'
 MODEL_DIR = 'saved_models'
 OUTPUT_CSV_PATH = os.path.join(OUTPUT_DIR, 'featurized_labeled_data.csv')

@@ -1,0 +1,1 @@
+["num_transactions", "nonce", "time_since_last_block", "miner_id", "total_amount_transacted", "avg_amount_transacted", "std_dev_amount", "total_energy_transacted", "unique_senders", "unique_recipients", "energy_payment_count", "energy_delivery_count", "unusual_tx_type_count", "payment_to_delivery_ratio", "sender_concentration"]

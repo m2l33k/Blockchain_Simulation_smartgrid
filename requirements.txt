@@ -1,6 +1,7 @@
 # Required dependencies
 numpy>=1.19.0
-psycopg2-binary
+streamlit 
+plotly
 # Optional dependencies
 # For database functionality:
 # mysql-connector-python>=8.0.0

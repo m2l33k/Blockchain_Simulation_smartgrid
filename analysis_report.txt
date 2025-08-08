@@ -103,6 +103,19 @@ Anomaly Counts by Type:
 - Wash Trading: 7
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 --- Detection Alert Details ---
 
 Time       Block ID   Confidence Score    

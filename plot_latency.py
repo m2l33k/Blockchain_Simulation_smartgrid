@@ -1,4 +1,3 @@
-# plot_latency.py (Final Version with High-Precision Timestamp Fix)
 
 import pandas as pd
 import logging
@@ -7,7 +6,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-# --- Configuration ---
 LOG_CSV_FILE = 'latency_log.csv'
 OUTPUT_DIR = 'visualized_data'
 

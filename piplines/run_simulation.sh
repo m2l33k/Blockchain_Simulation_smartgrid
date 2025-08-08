@@ -13,10 +13,10 @@
 
 # --- CONFIGURATION ---
 # Adjust these parameters to change the simulation behavior.
-SIMULATION_DURATION=300   # How long to run the simulation (in seconds).
+SIMULATION_DURATION=14400   # How long to run the simulation (in seconds).
 DIFFICULTY=2            # Mining difficulty. Lower is faster (e.g., 2 or 3). Higher is slower.
-PROSUMERS=10            # Number of energy-producing nodes.
-CONSUMERS=20            # Number of energy-consuming nodes.
+PROSUMERS=20            # Number of energy-producing nodes.
+CONSUMERS=30            # Number of energy-consuming nodes.
 
 # --- SCRIPT LOGIC ---
 # Do not change the lines below unless you know what you are doing.

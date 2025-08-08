@@ -101,31 +101,24 @@ def parse_log_file(log_file_path):
                     print(f"Warning: Could not parse JSON from line: {line.strip()}")
 
     return anomalies, detections, blocks
-
-# <-- CHANGE: The function now accepts an output_filename
 def analyze_results(anomalies, detections, blocks, output_filename):
     """
     Analyzes the parsed data and generates a report string.
     """
-    report_lines = [] # <-- CHANGE: We build a list of lines instead of printing
-
+    report_lines = [] 
     report_lines.append("="*80)
     report_lines.append("Simulation Log Analysis Report")
     report_lines.append("="*80)
-
     detected_anomaly_indices = set()
-
     for i, anomaly in enumerate(anomalies):
         anomaly_start = anomaly['start_time']
         anomaly_end = anomaly['end_time'] or (anomaly_start + timedelta(seconds=15))
-
         transaction_type_map = {
             "Theft": "fraudulent_payment",
             "Wash Trading": "wash_trade_payment",
             "DoS Attack": "spam_peak"
         }
-        anomaly_tx_type = transaction_type_map.get(anomaly['type'])
-        
+        anomaly_tx_type = transaction_type_map.get(anomaly['type'])        
         for detection in detections:
             if anomaly_start <= detection['timestamp'] <= anomaly_end:
                  detected_anomaly_indices.add(i)
@@ -145,20 +138,17 @@ def analyze_results(anomalies, detections, blocks, output_filename):
                                 break
                  if i in detected_anomaly_indices:
                      break
-
     report_lines.append("\n--- Overall Performance ---\n")
     total_anomalies = len(anomalies)
     report_lines.append(f"Total Anomalies Injected: {total_anomalies}")
     report_lines.append(f"Anomalies Detected: {len(detected_anomaly_indices)}")
     if total_anomalies > 0:
         detection_rate = (len(detected_anomaly_indices) / total_anomalies) * 100
-        report_lines.append(f"Overall Detection Rate: {detection_rate:.2f}%")
-    
+        report_lines.append(f"Overall Detection Rate: {detection_rate:.2f}%")    
     latencies = [a['detection_latency'].total_seconds() for a in anomalies if 'detection_latency' in a]
     if latencies:
         avg_latency = sum(latencies) / len(latencies)
         report_lines.append(f"Average Detection Latency: {avg_latency:.2f} seconds")
-
     report_lines.append("\n\n" + "--- Anomaly Injection Details ---" + "\n")
     anomaly_counts = defaultdict(int)
     for i, anomaly in enumerate(anomalies):
@@ -167,18 +157,15 @@ def analyze_results(anomalies, detections, blocks, output_filename):
         duration_str = ""
         if anomaly['end_time']:
             duration = (anomaly['end_time'] - anomaly['start_time']).total_seconds()
-            duration_str = f" (Duration: {duration:.2f}s)"
-        
+            duration_str = f" (Duration: {duration:.2f}s)"      
         latency_str = ""
         if 'detection_latency' in anomaly:
             latency_str = f" (Latency: {anomaly['detection_latency'].total_seconds():.2f}s)"
-
         report_lines.append(f"[{status}] {anomaly['start_time'].strftime('%H:%M:%S')} - {anomaly['type']}{duration_str}{latency_str}")
         details = anomaly.get('details', {})
         if 'node' in details: report_lines.append(f"    - Target Node: {details['node']}")
         if 'nodes' in details: report_lines.append(f"    - Involved Nodes: {', '.join(details['nodes'])}")
         if 'attacker' in details: report_lines.append(f"    - Details: Attacker {details['attacker']}, Victim {details['victim']}, Amount ${details['amount']:.2f}")
-
     report_lines.append("\nAnomaly Counts by Type:")
     for type, count in anomaly_counts.items():
         report_lines.append(f"- {type}: {count}")
@@ -194,23 +181,15 @@ def analyze_results(anomalies, detections, blocks, output_filename):
             report_lines.append(f"{detection['timestamp'].strftime('%H:%M:%S'):<10} {detection['block_id']:<10} {score_str:<20}")
 
     report_lines.append("\n" + "="*80)
-
-    # <-- CHANGE: Join all lines and write to the specified file
     final_report = "\n".join(report_lines)
     with open(output_filename, 'w') as f:
-        f.write(final_report)
-    
-    # <-- CHANGE: Print a confirmation message to the console
+        f.write(final_report)    
     print(f"Analysis complete. Report saved to '{output_filename}'")
-
-
 if __name__ == "__main__":
     LOG_FILE = 'live_detection_run.log'
-    REPORT_FILE = 'analysis_report.txt' # <-- CHANGE: Define the output filename
-
+    REPORT_FILE = 'analysis_report.txt' 
     try:
         anomalies, detections, blocks = parse_log_file(LOG_FILE)
-        # <-- CHANGE: Pass the filename to the function
         analyze_results(anomalies, detections, blocks, output_filename=REPORT_FILE) 
     except FileNotFoundError:
         print(f"Error: The log file '{LOG_FILE}' was not found.")

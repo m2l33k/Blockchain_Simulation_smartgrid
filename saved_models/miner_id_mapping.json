@@ -1,5 +1,13 @@
 {
-    "GRID-OP-01": 0,
-    "genesis": 1,
+    "miner_pool_0": 0,
+    "miner_pool_1": 1,
+    "miner_pool_2": 2,
+    "miner_pool_3": 3,
+    "miner_pool_4": 4,
+    "miner_pool_5": 5,
+    "miner_pool_6": 6,
+    "miner_pool_7": 7,
+    "miner_pool_8": 8,
+    "miner_pool_9": 9,
     "unknown": -1
 }
