@@ -1,4 +1,3 @@
-# fraud_detector_unsupervised_model.py (Final Version with Heuristics)
 
 import time
 import logging
@@ -80,13 +79,11 @@ class UnsupervisedFraudDetector:
 
     def process_new_block(self, block_index: int):
         with self.blockchain.lock:
-            if block_index < self.sequence_length: return # Need history to form a sequence
+            if block_index < self.sequence_length: return 
             
-            # Create a slice of the chain for the sequence
             block_sequence = self.blockchain.chain[block_index - self.sequence_length + 1 : block_index + 1]
             if len(block_sequence) < self.sequence_length: return
 
-            # Extract features for the entire sequence
             sequence_features = []
             last_ts = self.blockchain.chain[block_index - self.sequence_length].timestamp
             for block in block_sequence:
@@ -138,7 +135,6 @@ class UnsupervisedFraudDetector:
                 record_latency_event('detection', description)
                 return
         
-        # Heuristic 3: DoS Attack (many transactions from one source)
         senders = [tx['sender'] for tx in transactions]
         if senders:
             sender_counts = Counter(senders)

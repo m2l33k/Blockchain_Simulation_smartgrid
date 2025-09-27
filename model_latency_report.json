@@ -1,0 +1,8 @@
+{
+    "avg_latency_ms": 54.55743074417114,
+    "median_latency_ms": 54.384589195251465,
+    "std_latency_ms": 2.2744261557959997,
+    "min_latency_ms": 51.24092102050781,
+    "max_latency_ms": 61.33460998535156,
+    "throughput_preds_per_sec": 18.329308883498676
+}
